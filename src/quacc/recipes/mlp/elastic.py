@@ -25,7 +25,7 @@ def elastic_tensor_flow(
     run_static: bool = False,
     deform_kwargs: dict[str, Any] | None = None,
     job_params: dict[str, dict[str, Any]] | None = None,
-    job_decorators: dict[str, Callable | None] | None = None,
+    job_decorators: dict[str, Callable | None] | None = None,  # type: ignore[type-arg] # FIX ME
 ) -> ElasticSchema:
     """
     Workflow consisting of:
@@ -77,9 +77,9 @@ def elastic_tensor_flow(
         [relax_job, static_job],
         param_swaps=job_params,
         decorators=job_decorators,
-    )  # type: ignore
+    )  # type: ignore[misc] # FIX ME
 
-    return elastic_tensor_flow_(
+    return elastic_tensor_flow_(  # type: ignore[no-any-return] # FIX ME
         atoms=atoms,
         relax_job=relax_job_,
         static_job=static_job_,

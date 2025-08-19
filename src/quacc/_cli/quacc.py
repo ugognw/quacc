@@ -145,7 +145,7 @@ quacc settings: {settings}
 
 
 def _parameter_handler(
-    parameter: str, settings_dict: dict, value: Any | None = object
+    parameter: str, settings_dict: dict, value: Any | None = object  # type: ignore[type-arg] # FIX ME
 ) -> None:
     """
     Check if the parameter is a valid quacc configuration variable.
@@ -170,7 +170,7 @@ def _parameter_handler(
         msg = "Cannot set the CONFIG_FILE parameter via the CLI."
         raise ValueError(msg)
     if value is not object:
-        QuaccSettings(**{f"{parameter}": value})
+        QuaccSettings(**{f"{parameter}": value})  # type: ignore[arg-type] # FIX ME
 
 
 def _delete_setting(key: str, config_file: Path) -> None:

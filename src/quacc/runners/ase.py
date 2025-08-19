@@ -85,11 +85,11 @@ class Runner(BaseRunner):
         """
         self.copy_files = copy_files
         if isinstance(atoms, list):
-            self.atoms = [image.copy() for image in atoms]
-            for image in self.atoms:
+            self.atoms = [image.copy() for image in atoms]  # type: ignore[assignment, no-untyped-call] # FIX ME
+            for image in self.atoms:  # type: ignore[union-attr] # FIX ME
                 image.calc = deepcopy(calculator)
         else:
-            self.atoms = atoms.copy()
+            self.atoms = atoms.copy()  # type: ignore[no-untyped-call] # FIX ME
             self.atoms.calc = calculator
             self.setup()
 
@@ -117,13 +117,13 @@ class Runner(BaseRunner):
         if not properties:
             properties = (
                 ["energy"]
-                if isinstance(self.atoms.calc, Gaussian)
+                if isinstance(self.atoms.calc, Gaussian)  # type: ignore[union-attr] # FIX ME
                 else ["energy", "forces"]
             )  # TODO: Use GaussianOptimizer to avoid this hack
 
         # Run calculation
         try:
-            self.atoms.calc.calculate(
+            self.atoms.calc.calculate(  # type: ignore[union-attr] # FIX ME
                 self.atoms, properties=properties, system_changes=calculator.all_changes
             )
         except Exception as exception:
@@ -143,7 +143,7 @@ class Runner(BaseRunner):
             # If this happens, there is a serious problem.
             if (
                 np.array_equal(
-                    atoms_new.get_atomic_numbers(), self.atoms.get_atomic_numbers()
+                    atoms_new.get_atomic_numbers(), self.atoms.get_atomic_numbers()  # type: ignore[union-attr] # FIX ME
                 )
                 is False
             ):
@@ -151,13 +151,13 @@ class Runner(BaseRunner):
                     "Atomic numbers do not match between atoms and geom_file."
                 )
 
-            self.atoms.positions = atoms_new.positions
-            self.atoms.cell = atoms_new.cell
+            self.atoms.positions = atoms_new.positions  # type: ignore[union-attr] # FIX ME
+            self.atoms.cell = atoms_new.cell  # type: ignore[union-attr] # FIX ME
 
         # Perform cleanup operations
         self.cleanup()
 
-        return self.atoms
+        return self.atoms  # type: ignore[return-value] # FIX ME
 
     def run_opt(
         self,
@@ -167,7 +167,7 @@ class Runner(BaseRunner):
         optimizer: type[Dynamics] = BFGS,
         optimizer_kwargs: dict[str, Any] | None = None,
         store_intermediate_results: bool = False,
-        fn_hook: Callable | None = None,
+        fn_hook: Callable | None = None,  # type: ignore[type-arg] # FIX ME
         run_kwargs: dict[str, Any] | None = None,
         filter_kwargs: dict[str, Any] | None = None,
     ) -> Optimizer:
@@ -233,12 +233,12 @@ class Runner(BaseRunner):
 
         # Define the Trajectory object
         traj_file = self.tmpdir / traj_filename
-        traj = Trajectory(traj_file, "w", atoms=self.atoms)
+        traj = Trajectory(traj_file, "w", atoms=self.atoms)  # type: ignore[no-untyped-call] # FIX ME
         merged_optimizer_kwargs["trajectory"] = traj
 
         # Set volume relaxation constraints, if relevant
-        if relax_cell and self.atoms.pbc.any():
-            self.atoms = FrechetCellFilter(self.atoms, **filter_kwargs)
+        if relax_cell and self.atoms.pbc.any():  # type: ignore[union-attr] # FIX ME
+            self.atoms = FrechetCellFilter(self.atoms, **filter_kwargs)  # type: ignore[assignment, no-untyped-call] # FIX ME
 
         # Define run kwargs
         full_run_kwargs = {"steps": max_steps, **run_kwargs}
@@ -247,7 +247,7 @@ class Runner(BaseRunner):
 
         # Run optimization
         try:
-            with traj, optimizer(self.atoms, **merged_optimizer_kwargs) as dyn:
+            with traj, optimizer(self.atoms, **merged_optimizer_kwargs) as dyn:  # type: ignore[arg-type] # FIX ME
                 if issubclass(optimizer, SciPyOptimizer):
                     # https://gitlab.com/ase/ase/-/issues/1475
                     dyn.run(**full_run_kwargs)
@@ -258,8 +258,8 @@ class Runner(BaseRunner):
                                 i,
                                 files_to_ignore=[
                                     traj_file,
-                                    merged_optimizer_kwargs.get("restart"),
-                                    merged_optimizer_kwargs.get("logfile"),
+                                    merged_optimizer_kwargs.get("restart"),  # type: ignore[list-item] # FIX ME
+                                    merged_optimizer_kwargs.get("logfile"),  # type: ignore[list-item] # FIX ME
                                 ],
                             )
                         if fn_hook:
@@ -272,7 +272,7 @@ class Runner(BaseRunner):
         traj.filename = zpath(str(self.job_results_dir / traj_filename))
         dyn.trajectory = traj
 
-        return dyn
+        return dyn  # type: ignore[no-any-return] # FIX ME
 
     def run_vib(self, vib_kwargs: VibKwargs | None = None) -> Vibrations:
         """
@@ -296,14 +296,14 @@ class Runner(BaseRunner):
         vib_kwargs = vib_kwargs or {}
 
         # Run calculation
-        vib = Vibrations(self.atoms, name=str(self.tmpdir / "vib"), **vib_kwargs)
+        vib = Vibrations(self.atoms, name=str(self.tmpdir / "vib"), **vib_kwargs)  # type: ignore[no-untyped-call] # FIX ME
         try:
-            vib.run()
+            vib.run()  # type: ignore[no-untyped-call] # FIX ME
         except Exception as exception:
             terminate(self.tmpdir, exception)
 
         # Summarize run
-        vib.summary(log=str(self.tmpdir / "vib_summary.log"))
+        vib.summary(log=str(self.tmpdir / "vib_summary.log"))  # type: ignore[no-untyped-call] # FIX ME
 
         # Perform cleanup operations
         self.cleanup()
@@ -355,16 +355,16 @@ class Runner(BaseRunner):
         dynamics_kwargs["logfile"] = self.tmpdir / "md.log"
 
         if maxwell_boltzmann_kwargs:
-            MaxwellBoltzmannDistribution(self.atoms, **maxwell_boltzmann_kwargs)
+            MaxwellBoltzmannDistribution(self.atoms, **maxwell_boltzmann_kwargs)  # type: ignore[arg-type] # FIX ME
         if set_com_stationary:
-            Stationary(self.atoms)
+            Stationary(self.atoms)  # type: ignore[arg-type] # FIX ME
         if set_zero_rotation:
-            ZeroRotation(self.atoms)
+            ZeroRotation(self.atoms)  # type: ignore[arg-type] # FIX ME
 
-        return self.run_opt(
+        return self.run_opt(  # type: ignore[return-value] # FIX ME
             fmax=None,
             max_steps=steps,
-            optimizer=dynamics,
+            optimizer=dynamics,  # type: ignore[arg-type] # FIX ME
             optimizer_kwargs=dynamics_kwargs,
         )
 
@@ -413,7 +413,7 @@ class Runner(BaseRunner):
         neb_tmpdir, neb_results_dir = calc_setup(None)
 
         # Adjust optimizer_kwargs to use the parent directory
-        optimizer_kwargs = recursive_dict_merge(
+        optimizer_kwargs = recursive_dict_merge(  # type: ignore[assignment] # FIX ME
             {
                 "logfile": str(neb_tmpdir / "opt.log"),
                 "restart": str(neb_tmpdir / "opt.json"),
@@ -421,7 +421,7 @@ class Runner(BaseRunner):
             optimizer_kwargs,
         )
 
-        if "trajectory" in optimizer_kwargs:
+        if "trajectory" in optimizer_kwargs:  # type: ignore[operator] # FIX ME
             msg = "Quacc does not support setting the `trajectory` kwarg."
             raise ValueError(msg)
 
@@ -429,27 +429,27 @@ class Runner(BaseRunner):
             raise ValueError("BFGSLineSearch is not allowed as optimizer with NEB.")
 
         # Copy atoms so we don't modify it in-place
-        neb = NEB(images, **neb_kwargs)
+        neb = NEB(images, **neb_kwargs)  # type: ignore[no-untyped-call] # FIX ME
 
         # Perform staging operations
-        for i, image in enumerate(images):
+        for i, image in enumerate(images):  # type: ignore[arg-type] # FIX ME
             image_tmpdir = neb_tmpdir / f"image_{i}"
             image_tmpdir.mkdir()
             image.calc.directory = image_tmpdir
 
         # Define the Trajectory object
         traj_file = neb_tmpdir / traj_filename
-        traj = Trajectory(traj_file, "w", atoms=neb)
+        traj = Trajectory(traj_file, "w", atoms=neb)  # type: ignore[no-untyped-call] # FIX ME
 
         # Set volume relaxation constraints, if relevant
         if relax_cell:
-            for i in range(len(images)):
-                if images[i].pbc.any():
-                    images[i] = FrechetCellFilter(images[i])
+            for i in range(len(images)):  # type: ignore[arg-type] # FIX ME
+                if images[i].pbc.any():  # type: ignore[index, union-attr] # FIX ME
+                    images[i] = FrechetCellFilter(images[i])  # type: ignore[index, no-untyped-call] # FIX ME
 
-        dyn = optimizer(neb, **optimizer_kwargs)
-        dyn.attach(traj.write)
-        dyn.run(fmax, max_steps)
+        dyn = optimizer(neb, **optimizer_kwargs)  # type: ignore[arg-type] # FIX ME
+        dyn.attach(traj.write)  # type: ignore[no-untyped-call] # FIX ME
+        dyn.run(fmax, max_steps)  # type: ignore[no-untyped-call] # FIX ME
         traj.close()
         dyn.logfile.close()
 
@@ -512,5 +512,5 @@ class Runner(BaseRunner):
         if "order" not in optimizer_kwargs:
             optimizer_kwargs["order"] = 0
 
-        if not self.atoms.pbc.any() and "internal" not in optimizer_kwargs:
+        if not self.atoms.pbc.any() and "internal" not in optimizer_kwargs:  # type: ignore[union-attr] # FIX ME
             optimizer_kwargs["internal"] = True

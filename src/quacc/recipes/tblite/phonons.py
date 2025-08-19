@@ -45,7 +45,7 @@ def phonon_flow(
     t_min: float = 0,
     t_max: float = 1000,
     job_params: dict[str, dict[str, Any]] | None = None,
-    job_decorators: dict[str, Callable | None] | None = None,
+    job_decorators: dict[str, Callable | None] | None = None,  # type: ignore[type-arg] # FIX ME
 ) -> PhononSchema:
     """
     Carry out a phonon workflow, consisting of:
@@ -104,7 +104,7 @@ def phonon_flow(
         decorators=job_decorators,
     )
 
-    return phonon_subflow(
+    return phonon_subflow(  # type: ignore[no-any-return] # FIX ME
         atoms,
         static_job_,
         symprec=symprec,

@@ -60,7 +60,7 @@ def make_qc_input(qchem: QChem, atoms: Atoms) -> QCInput:
             qchem.qchem_dict_set_params["qchem_version"] = 6
 
         # Make QChemDictSet
-        qc_dict_set = QChemDictSet(molecule, **qchem.qchem_dict_set_params)
+        qc_dict_set = QChemDictSet(molecule, **qchem.qchem_dict_set_params)  # type: ignore[arg-type] # FIX ME
         for prop in [
             "rem",
             "opt",
@@ -83,12 +83,12 @@ def make_qc_input(qchem: QChem, atoms: Atoms) -> QCInput:
             if prop2 and not prop1:
                 setattr(qchem, prop, prop2)
 
-    qchem.rem = sort_dict(
+    qchem.rem = sort_dict(  # type: ignore[assignment] # FIX ME
         get_rem_swaps(qchem.rem, restart=qchem.prev_orbital_coeffs is not None)
     )
 
     return QCInput(
-        molecule,
+        molecule,  # type: ignore[arg-type] # FIX ME
         qchem.rem,
         opt=qchem.opt,
         pcm=qchem.pcm,
@@ -133,7 +133,7 @@ def cleanup_attrs(qchem: QChem) -> None:
         "svp",
         "pcm_nonels",
     ]:
-        attr_val = lower_and_check_unique(getattr(qchem, attr))
+        attr_val = lower_and_check_unique(getattr(qchem, attr))  # type: ignore[no-untyped-call] # FIX ME
         setattr(qchem, attr, attr_val)
 
 

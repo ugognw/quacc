@@ -209,7 +209,7 @@ class QuaccSettings(BaseSettings):
     # GULP Settings
     # ---------------------------
     GULP_CMD: str = Field("gulp", description=("Path to the GULP executable."))
-    GULP_LIB: Path | None = Field(
+    GULP_LIB: Path | None = Field(  # type: ignore[assignment] # FIX ME
         os.environ.get("GULP_LIB"),
         description=(
             "Path to the GULP force field library. If not specified, the GULP_LIB environment variable will be used (if present)."
@@ -237,11 +237,11 @@ class QuaccSettings(BaseSettings):
     VASP_GAMMA_CMD: str = Field(
         "vasp_gam", description="Command to run the gamma-point only version of VASP."
     )
-    VASP_PP_PATH: Path | None = Field(
+    VASP_PP_PATH: Path | None = Field(  # type: ignore[assignment] # FIX ME
         os.environ.get("VASP_PP_PATH"),
         description="Path to the VASP pseudopotential library. Must contain the directories `potpaw_PBE` and `potpaw` for PBE and LDA pseudopotentials, respectively. If ASE's VASP_PP_PATH is set, you do not need to set this.",
     )
-    VASP_VDW: Path | None = Field(
+    VASP_VDW: Path | None = Field(  # type: ignore[assignment] # FIX ME
         os.environ.get("ASE_VASP_VDW"),
         description="Path to the folder containing the vdw_kernel.bindat file for VASP vdW functionals. If ASE's ASE_VASP_VDW is set, you do not need to set this.",
     )
@@ -465,7 +465,7 @@ class QuaccSettings(BaseSettings):
             .resolve()
         )
 
-        new_settings = {}  # type: dict
+        new_settings = {}  # type: ignore[var-annotated]
         if config_file_path.exists() and config_file_path.stat().st_size > 0:
             new_settings |= loadfn(config_file_path)
 
@@ -517,7 +517,7 @@ def _type_handler(settings: dict[str, Any]) -> dict[str, Any]:
 
 
 @contextmanager
-def change_settings(changes: dict[str, Any]):
+def change_settings(changes: dict[str, Any]):  # type: ignore[no-untyped-def] # FIX ME
     """
     Temporarily change an attribute of an object.
 
@@ -544,7 +544,7 @@ def change_settings(changes: dict[str, Any]):
         _internally_set_settings(changes=original_values)
 
 
-def change_settings_wrap(func: Callable, changes: dict[str, Any]) -> Callable:
+def change_settings_wrap(func: Callable, changes: dict[str, Any]) -> Callable:  # type: ignore[type-arg] # FIX ME
     """
     Wraps a function with the change_settings context manager if not already wrapped.
 
@@ -560,13 +560,13 @@ def change_settings_wrap(func: Callable, changes: dict[str, Any]) -> Callable:
     Callable
         The wrapped function.
     """
-    original_func = func._original_func if getattr(func, "_changed", False) else func
+    original_func = func._original_func if getattr(func, "_changed", False) else func  # type: ignore[attr-defined] # FIX ME
 
     @wraps(original_func)
-    def wrapper(*args, **kwargs):
+    def wrapper(*args, **kwargs):  # type: ignore[no-untyped-def] # FIX ME
         with change_settings(changes):
             return original_func(*args, **kwargs)
 
-    wrapper._changed = True
-    wrapper._original_func = original_func
+    wrapper._changed = True  # type: ignore[attr-defined] # FIX ME
+    wrapper._original_func = original_func  # type: ignore[attr-defined] # FIX ME
     return wrapper

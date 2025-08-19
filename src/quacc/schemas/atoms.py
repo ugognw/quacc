@@ -41,8 +41,8 @@ def atoms_to_metadata(
     atoms.calc = None
 
     # Strip the dummy atoms, if present
-    if "X" in atoms.get_chemical_symbols():
-        del atoms[[atom.index for atom in atoms if atom.symbol == "X"]]
+    if "X" in atoms.get_chemical_symbols():  # type: ignore[no-untyped-call] # FIX ME
+        del atoms[[atom.index for atom in atoms if atom.symbol == "X"]]  # type: ignore[no-untyped-call] # FIX ME
 
     # Get Pymatgen Structure/Molecule metadata
     if atoms.pbc.any():
@@ -59,4 +59,4 @@ def atoms_to_metadata(
     # Store Atoms object
     results["atoms"] = atoms
 
-    return results | additional_fields
+    return results | additional_fields  # type: ignore[return-value] # FIX ME

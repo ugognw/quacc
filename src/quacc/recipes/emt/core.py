@@ -23,7 +23,7 @@ if TYPE_CHECKING:
 
 
 @job
-def static_job(
+def static_job(  # type: ignore[no-untyped-def] # FIX ME
     atoms: Atoms, additional_fields: dict[str, Any] | None = None, **calc_kwargs
 ) -> RunSchema:
     """
@@ -46,7 +46,7 @@ def static_job(
         Dictionary of results, specified in [quacc.schemas.ase.Summarize.run][].
         See the type-hint for the data structure.
     """
-    calc = EMT(**calc_kwargs)
+    calc = EMT(**calc_kwargs)  # type: ignore[no-untyped-call] # FIX ME
     final_atoms = Runner(atoms, calc).run_calc()
 
     return Summarize(
@@ -55,7 +55,7 @@ def static_job(
 
 
 @job
-def relax_job(
+def relax_job(  # type: ignore[no-untyped-def] # FIX ME
     atoms: Atoms,
     relax_cell: bool = False,
     opt_params: OptParams | None = None,
@@ -89,8 +89,8 @@ def relax_job(
     """
     opt_params = opt_params or {}
 
-    calc = EMT(**calc_kwargs)
-    dyn = Runner(atoms, calc).run_opt(relax_cell=relax_cell, **opt_params)
+    calc = EMT(**calc_kwargs)  # type: ignore[no-untyped-call] # FIX ME
+    dyn = Runner(atoms, calc).run_opt(relax_cell=relax_cell, **opt_params)  # type: ignore[arg-type, misc] # FIX ME
 
     return Summarize(
         additional_fields={"name": "EMT Relax"} | (additional_fields or {})

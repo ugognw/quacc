@@ -40,7 +40,7 @@ if TYPE_CHECKING:
     "Missing pymatgen-analysis-defects. Please run pip install quacc[defects]",
 )
 @requires(has_shakenbreak, "Missing shakenbreak. Please run pip install quacc[defects]")
-def make_defects_from_bulk(
+def make_defects_from_bulk(  # type: ignore[no-untyped-def] # FIX ME
     atoms: Atoms,
     defect_gen: (
         AntiSiteGenerator
@@ -51,7 +51,7 @@ def make_defects_from_bulk(
         | VoronoiInterstitialGenerator
     ) = VacancyGenerator,
     defect_charge: int = 0,
-    sc_mat: NDArray | None = None,
+    sc_mat: NDArray | None = None,  # type: ignore[type-arg] # FIX ME
     min_atoms: int = 80,
     max_atoms: int = 240,
     min_length: float = 10.0,

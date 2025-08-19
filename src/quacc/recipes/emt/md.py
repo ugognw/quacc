@@ -25,9 +25,9 @@ if TYPE_CHECKING:
 
 
 @job
-def md_job(
+def md_job(  # type: ignore[no-untyped-def] # FIX ME
     atoms: Atoms,
-    dynamics: MolecularDynamics = VelocityVerlet,
+    dynamics: MolecularDynamics = VelocityVerlet,  # type: ignore[assignment] # FIX ME
     steps: int = 1000,
     timestep_fs: float = 1.0,
     temperature_K: float | None = None,
@@ -80,10 +80,10 @@ def md_job(
             "pressure_au": pressure_bar * bar if pressure_bar else Remove,
         },
     }
-    md_params = recursive_dict_merge(md_defaults, md_params)
+    md_params = recursive_dict_merge(md_defaults, md_params)  # type: ignore[arg-type, assignment] # FIX ME
 
-    calc = EMT(**calc_kwargs)
-    dyn = Runner(atoms, calc, copy_files=copy_files).run_md(dynamics, **md_params)
+    calc = EMT(**calc_kwargs)  # type: ignore[no-untyped-call] # FIX ME
+    dyn = Runner(atoms, calc, copy_files=copy_files).run_md(dynamics, **md_params)  # type: ignore[arg-type] # FIX ME
 
     return Summarize(
         additional_fields={"name": "EMT MD"} | (additional_fields or {})

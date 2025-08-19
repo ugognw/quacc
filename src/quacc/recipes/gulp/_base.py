@@ -26,7 +26,7 @@ GEOM_FILE_PBC = "gulp.cif"
 GEOM_FILE_NOPBC = "gulp.xyz"
 
 
-def run_and_summarize(
+def run_and_summarize(  # type: ignore[no-untyped-def] # FIX ME
     atoms: Atoms,
     library: str | None = None,
     keyword_defaults: list[str] | None = None,
@@ -90,15 +90,15 @@ def run_and_summarize(
         )
     ]
 
-    keywords = merge_list_params(keyword_defaults, keyword_swaps)
-    options = merge_list_params(option_defaults, option_swaps)
+    keywords = merge_list_params(keyword_defaults, keyword_swaps)  # type: ignore[arg-type] # FIX ME
+    options = merge_list_params(option_defaults, option_swaps)  # type: ignore[arg-type] # FIX ME
 
     gulp_keywords = " ".join(keywords)
     gulp_options = list(options)
 
     if settings.GULP_LIB:
         os.environ["GULP_LIB"] = str(settings.GULP_LIB)
-    calc = GULP(
+    calc = GULP(  # type: ignore[no-untyped-call] # FIX ME
         command=gulp_cmd,
         keywords=gulp_keywords,
         options=gulp_options,

@@ -238,7 +238,7 @@ def load_yaml_calc(yaml_path: str | Path) -> dict[str, Any]:
 
             del config[config_arg]
 
-    return config
+    return config  # type: ignore[no-any-return] # FIX ME
 
 
 def find_recent_logfile(
@@ -274,7 +274,7 @@ def find_recent_logfile(
             if ext in "".join(f.suffixes) and f_path.stat().st_mtime > mod_time:
                 mod_time = f_path.stat().st_mtime
                 logfile = f_path.resolve()
-    return logfile
+    return logfile  # type: ignore[return-value] # FIX ME
 
 
 def get_uri(directory: str | Path) -> str:

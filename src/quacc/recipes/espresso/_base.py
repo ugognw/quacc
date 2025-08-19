@@ -6,10 +6,10 @@ from pathlib import Path
 from typing import TYPE_CHECKING
 
 from ase.atoms import Atoms
-from ase.io.espresso import Namelist
+from ase.io.espresso import Namelist  # type: ignore[attr-defined] # FIX ME
 from ase.io.espresso_namelist.keys import ALL_KEYS
 
-from quacc.calculators.espresso.espresso import (
+from quacc.calculators.espresso.espresso import (  # type: ignore[attr-defined] # FIX ME
     Espresso,
     EspressoProfile,
     EspressoTemplate,
@@ -72,7 +72,7 @@ def run_and_summarize(
     RunSchema
         Dictionary of results from [quacc.schemas.ase.Summarize.run][]
     """
-    atoms = Atoms() if atoms is None else atoms
+    atoms = Atoms() if atoms is None else atoms  # type: ignore[no-untyped-call] # FIX ME
     calc = prepare_calc(
         atoms,
         preset=preset,
@@ -150,7 +150,7 @@ def run_and_summarize_opt(
     RunSchema
         Dictionary of results from [quacc.schemas.ase.Summarize.run][]
     """
-    atoms = Atoms() if atoms is None else atoms
+    atoms = Atoms() if atoms is None else atoms  # type: ignore[no-untyped-call] # FIX ME
     calc = prepare_calc(
         atoms,
         preset=preset,
@@ -166,7 +166,7 @@ def run_and_summarize_opt(
         binary=calc.template.binary,
     )
 
-    opt_flags = recursive_dict_merge(opt_defaults, opt_params)
+    opt_flags = recursive_dict_merge(opt_defaults, opt_params)  # type: ignore[arg-type] # FIX ME
 
     dyn = Runner(atoms, calc, copy_files=updated_copy_files).run_opt(**opt_flags)
 
@@ -262,7 +262,7 @@ def prepare_copy(
         copy_files = [copy_files]
 
     if isinstance(copy_files, list):
-        exact_files_to_copy = prepare_copy_files(calc_params, binary=binary)
-        return dict.fromkeys(copy_files, exact_files_to_copy)
+        exact_files_to_copy = prepare_copy_files(calc_params, binary=binary)  # type: ignore[arg-type] # FIX ME
+        return dict.fromkeys(copy_files, exact_files_to_copy)  # type: ignore[arg-type] # FIX ME
 
     return copy_files

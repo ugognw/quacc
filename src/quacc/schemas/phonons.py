@@ -76,4 +76,4 @@ def summarize_phonopy(
 
     atoms_metadata = atoms_to_metadata(input_atoms)
     unsorted_task_doc = atoms_metadata | inputs | results | additional_fields
-    return clean_dict(unsorted_task_doc)
+    return clean_dict(unsorted_task_doc)  # type: ignore[return-value] # FIX ME

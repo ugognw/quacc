@@ -104,7 +104,7 @@ def run_and_summarize_opt(
         Dictionary of results from [quacc.schemas.ase.Summarize.opt][]
     """
     calc_flags = recursive_dict_merge(calc_defaults, calc_swaps)
-    opt_flags = recursive_dict_merge(opt_defaults, opt_params)
+    opt_flags = recursive_dict_merge(opt_defaults, opt_params)  # type: ignore[arg-type] # FIX ME
 
     calc = QChem(
         atoms, charge=charge, spin_multiplicity=spin_multiplicity, **calc_flags

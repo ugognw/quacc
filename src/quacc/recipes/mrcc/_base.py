@@ -108,4 +108,4 @@ def prep_calculator(
 
     settings = get_settings()
 
-    return MRCC(profile=MrccProfile(command=settings.MRCC_CMD), **mrccinput)
+    return MRCC(profile=MrccProfile(command=settings.MRCC_CMD), **mrccinput)  # type: ignore[no-untyped-call] # FIX ME

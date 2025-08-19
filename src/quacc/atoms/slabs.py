@@ -42,11 +42,11 @@ def flip_atoms(atoms: Atoms, return_struct: bool = False) -> Atoms:
     new_atoms = (
         atoms.to_ase_atoms() if isinstance(atoms, Structure) else copy_atoms(atoms)
     )
-    new_atoms.rotate(180, "x")
-    new_atoms.wrap()
+    new_atoms.rotate(180, "x")  # type: ignore[no-untyped-call] # FIX ME
+    new_atoms.wrap()  # type: ignore[no-untyped-call] # FIX ME
 
     if return_struct:
-        new_atoms = AseAtomsAdaptor.get_structure(new_atoms)
+        new_atoms = AseAtomsAdaptor.get_structure(new_atoms)  # type: ignore[assignment] # FIX ME
 
     return new_atoms
 
@@ -66,13 +66,13 @@ def flip_structure(struct: Structure | Slab) -> Structure | Slab:
         Inverted slab
     """
     new_atoms = struct.to_ase_atoms()
-    new_atoms.rotate(180, "x")
-    new_atoms.wrap()
+    new_atoms.rotate(180, "x")  # type: ignore[no-untyped-call] # FIX ME
+    new_atoms.wrap()  # type: ignore[no-untyped-call] # FIX ME
 
-    return AseAtomsAdaptor.get_structure(new_atoms)
+    return AseAtomsAdaptor.get_structure(new_atoms)  # type: ignore[return-value] # FIX ME
 
 
-def make_slabs_from_bulk(
+def make_slabs_from_bulk(  # type: ignore[no-untyped-def] # FIX ME
     atoms: Atoms,
     max_index: int = 1,
     min_slab_size: float = 10.0,
@@ -122,7 +122,7 @@ def make_slabs_from_bulk(
 
     # Make all the slabs
     slabs = generate_all_slabs(
-        struct,
+        struct,  # type: ignore[arg-type] # FIX ME
         max_index,
         min_slab_size,
         min_vacuum_size,
@@ -138,7 +138,7 @@ def make_slabs_from_bulk(
             if not slab.is_symmetric():
                 # Flip the slab and its oriented unit cell
                 new_slab = flip_structure(slab)
-                new_oriented_unit_cell = flip_structure(slab.oriented_unit_cell)
+                new_oriented_unit_cell = flip_structure(slab.oriented_unit_cell)  # type: ignore[arg-type] # FIX ME
 
                 # Reconstruct the full slab object, noting the new shift and
                 # oriented unit cell
@@ -160,7 +160,7 @@ def make_slabs_from_bulk(
                 # Add the new slab to the list
                 new_slabs.append(new_slab)
 
-        slabs.extend(new_slabs)
+        slabs.extend(new_slabs)  # type: ignore[arg-type] # FIX ME
 
     # For each slab, make sure the lengths and widths are large enough and fix
     # atoms z_fix away from the top of the slab.
@@ -286,18 +286,18 @@ def make_adsorbate_structures(
         raise ValueError(msg, allowed_surface_indices, atom_indices)
 
     # Add 0.0 initial magmoms to atoms/adsorbate if needed
-    if atoms.has("initial_magmoms") and not adsorbate.has("initial_magmoms"):
-        adsorbate.set_initial_magnetic_moments([0.0] * len(adsorbate))
-    if adsorbate.has("initial_magmoms") and not atoms.has("initial_magmoms"):
-        atoms.set_initial_magnetic_moments([0.0] * len(atoms))
+    if atoms.has("initial_magmoms") and not adsorbate.has("initial_magmoms"):  # type: ignore[no-untyped-call] # FIX ME
+        adsorbate.set_initial_magnetic_moments([0.0] * len(adsorbate))  # type: ignore[no-untyped-call] # FIX ME
+    if adsorbate.has("initial_magmoms") and not atoms.has("initial_magmoms"):  # type: ignore[no-untyped-call] # FIX ME
+        atoms.set_initial_magnetic_moments([0.0] * len(atoms))  # type: ignore[no-untyped-call] # FIX ME
 
     # Make a Pymatgen structure and molecule
     struct = AseAtomsAdaptor.get_structure(atoms)
     mol = AseAtomsAdaptor.get_molecule(adsorbate, charge_spin_check=False)
 
     # Get the adsorption sites
-    ads_finder = AdsorbateSiteFinder(struct, **ads_site_finder_kwargs)
-    ads_sites = ads_finder.find_adsorption_sites(**find_ads_sites_kwargs)
+    ads_finder = AdsorbateSiteFinder(struct, **ads_site_finder_kwargs)  # type: ignore[arg-type] # FIX ME
+    ads_sites = ads_finder.find_adsorption_sites(**find_ads_sites_kwargs)  # type: ignore[no-untyped-call] # FIX ME
 
     # Find and add the adsorbates
     new_atoms = []
@@ -308,7 +308,7 @@ def make_adsorbate_structures(
 
         for ads_coord in ads_coords:
             # Place adsorbate
-            struct_with_adsorbate = ads_finder.add_adsorbate(mol, ads_coord)
+            struct_with_adsorbate = ads_finder.add_adsorbate(mol, ads_coord)  # type: ignore[arg-type] # FIX ME
 
             # Convert back to Atoms object
             atoms_with_adsorbate = struct_with_adsorbate.to_ase_atoms()
@@ -385,6 +385,6 @@ def get_surface_energy(
         The surface energy in eV/A^2.
     """
     alpha = len(slab) / len(bulk)
-    cell = slab.get_cell()
+    cell = slab.get_cell()  # type: ignore[no-untyped-call] # FIX ME
     area = float(np.linalg.norm(np.cross(cell[0], cell[1])))
     return (slab_energy - alpha * bulk_energy) / (2 * area)

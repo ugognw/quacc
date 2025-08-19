@@ -111,7 +111,7 @@ def phonon_subflow(
             non_displaced_atoms, phonopy.supercell_matrix
         )
     else:
-        non_displaced_atoms_supercell = Atoms()
+        non_displaced_atoms_supercell = Atoms()  # type: ignore[no-untyped-call] # FIX ME
 
     supercells = [
         phonopy_atoms_to_ase_atoms(s) + non_displaced_atoms_supercell
@@ -119,7 +119,7 @@ def phonon_subflow(
     ]
 
     @subflow
-    def _get_forces_subflow(supercells: list[Atoms]) -> list[dict]:
+    def _get_forces_subflow(supercells: list[Atoms]) -> list[dict]:  # type: ignore[type-arg] # FIX ME
         return [
             force_job(supercell) for supercell in supercells if supercell is not None
         ]
@@ -128,7 +128,7 @@ def phonon_subflow(
     def _thermo_job(
         atoms: Atoms,
         phonopy: Phonopy,
-        force_job_results: list[dict],
+        force_job_results: list[dict],  # type: ignore[type-arg] # FIX ME
         t_step: float,
         t_min: float,
         t_max: float,
@@ -148,7 +148,7 @@ def phonon_subflow(
             t_max=t_max,
         )
 
-        return summarize_phonopy(
+        return summarize_phonopy(  # type: ignore[no-any-return] # FIX ME
             phonopy,
             atoms,
             phonopy_results.directory,
@@ -157,7 +157,7 @@ def phonon_subflow(
         )
 
     if non_displaced_atoms:
-        additional_fields = recursive_dict_merge(
+        additional_fields = recursive_dict_merge(  # type: ignore[assignment] # FIX ME
             additional_fields,
             {
                 "displaced_atoms": displaced_atoms,
@@ -166,6 +166,6 @@ def phonon_subflow(
         )
 
     force_job_results = _get_forces_subflow(supercells)
-    return _thermo_job(
+    return _thermo_job(  # type: ignore[no-any-return] # FIX ME
         atoms, phonopy, force_job_results, t_step, t_min, t_max, additional_fields
     )

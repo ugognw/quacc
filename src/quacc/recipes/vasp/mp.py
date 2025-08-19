@@ -36,7 +36,7 @@ _MP_SETTINGS = {"VASP_INCAR_COPILOT": "off", "VASP_USE_CUSTODIAN": True}
 
 @job
 @requires(has_atomate2, "atomate2 is not installed. Run `pip install quacc[mp]`")
-def mp_prerelax_job(
+def mp_prerelax_job(  # type: ignore[no-untyped-def] # FIX ME
     atoms: Atoms, prev_dir: SourceDirectory | None = None, **calc_kwargs
 ) -> VaspSchema:
     """
@@ -70,13 +70,13 @@ def mp_prerelax_job(
             calc_swaps=calc_kwargs,
             report_mp_corrections=True,
             additional_fields={"name": "MP PBESol Pre-Relax"},
-            copy_files={prev_dir: ["CHGCAR*", "WAVECAR*"]},
+            copy_files={prev_dir: ["CHGCAR*", "WAVECAR*"]},  # type: ignore[dict-item] # FIX ME
         )
 
 
 @job
 @requires(has_atomate2, "atomate2 is not installed. Run `pip install quacc[mp]`")
-def mp_metagga_relax_job(
+def mp_metagga_relax_job(  # type: ignore[no-untyped-def] # FIX ME
     atoms: Atoms, prev_dir: SourceDirectory | None = None, **calc_kwargs
 ) -> VaspSchema:
     """
@@ -109,13 +109,13 @@ def mp_metagga_relax_job(
             calc_swaps=calc_kwargs,
             report_mp_corrections=True,
             additional_fields={"name": "MP r2SCAN Relax"},
-            copy_files={prev_dir: ["CHGCAR*", "WAVECAR*"]},
+            copy_files={prev_dir: ["CHGCAR*", "WAVECAR*"]},  # type: ignore[dict-item] # FIX ME
         )
 
 
 @job
 @requires(has_atomate2, "atomate2 is not installed. Run `pip install quacc[mp]`")
-def mp_metagga_static_job(
+def mp_metagga_static_job(  # type: ignore[no-untyped-def] # FIX ME
     atoms: Atoms, prev_dir: SourceDirectory | None = None, **calc_kwargs
 ) -> VaspSchema:
     """
@@ -149,7 +149,7 @@ def mp_metagga_static_job(
             calc_swaps=calc_kwargs,
             report_mp_corrections=True,
             additional_fields={"name": "MP r2SCAN Static"},
-            copy_files={prev_dir: ["CHGCAR*", "WAVECAR*"]},
+            copy_files={prev_dir: ["CHGCAR*", "WAVECAR*"]},  # type: ignore[dict-item] # FIX ME
         )
 
 
@@ -158,7 +158,7 @@ def mp_metagga_static_job(
 def mp_metagga_relax_flow(
     atoms: Atoms,
     job_params: dict[str, dict[str, Any]] | None = None,
-    job_decorators: dict[str, Callable | None] | None = None,
+    job_decorators: dict[str, Callable | None] | None = None,  # type: ignore[type-arg] # FIX ME
 ) -> MPMetaGGARelaxFlowSchema:
     """
     Materials Project r2SCAN workflow consisting of:
@@ -195,7 +195,7 @@ def mp_metagga_relax_flow(
     MPMetaGGARelaxFlowSchema
         Dictionary of results. See the type-hint for the data structure.
     """
-    (mp_prerelax_job_, mp_metagga_relax_job_, mp_metagga_static_job_) = customize_funcs(
+    (mp_prerelax_job_, mp_metagga_relax_job_, mp_metagga_static_job_) = customize_funcs(  # type: ignore[misc] # FIX ME
         ["mp_prerelax_job", "mp_metagga_relax_job", "mp_metagga_static_job"],
         [mp_prerelax_job, mp_metagga_relax_job, mp_metagga_static_job],
         param_swaps=job_params,

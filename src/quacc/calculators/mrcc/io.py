@@ -29,29 +29,29 @@ def read_geom_mrccinp(file_path: Path | str) -> Atoms:
     """
 
     # Get the lines as a list
-    with Path.open(file_path) as fd:
+    with Path.open(file_path) as fd:  # type: ignore[arg-type] # FIX ME
         lines = fd.readlines()
     xyz_line_index = [index for index, line in enumerate(lines) if "xyz" in line]
 
     if len(xyz_line_index) != 1:
         raise ValueError("Geometry incorrectly provided in MRCC input file")
 
-    xyz_line_index = xyz_line_index[0]
+    xyz_line_index = xyz_line_index[0]  # type: ignore[assignment] # FIX ME
 
     # Get the number of atoms
-    atoms_length = int(lines[xyz_line_index + 1])
+    atoms_length = int(lines[xyz_line_index + 1])  # type: ignore[operator] # FIX ME
 
     # Format and send the string to be read by ase.io.read()
     xyz_text = f"{atoms_length}\n geometry\n"
-    for line in lines[xyz_line_index + 3 : xyz_line_index + 3 + atoms_length]:
+    for line in lines[xyz_line_index + 3 : xyz_line_index + 3 + atoms_length]:  # type: ignore[operator] # FIX ME
         xyz_text += line
     atoms = read(StringIO(xyz_text), format="xyz")
 
     # Remove PBC and set the unit cell to zero as MRCC is a molecular code.
-    atoms.pbc = False
-    atoms.set_cell([0.0, 0.0, 0.0])
+    atoms.pbc = False  # type: ignore[union-attr] # FIX ME
+    atoms.set_cell([0.0, 0.0, 0.0])  # type: ignore[union-attr] # FIX ME
 
-    return atoms
+    return atoms  # type: ignore[return-value] # FIX ME
 
 
 def write_mrcc(file_path: Path | str, atoms: Atoms, parameters: dict[str, str]) -> None:
@@ -68,28 +68,28 @@ def write_mrcc(file_path: Path | str, atoms: Atoms, parameters: dict[str, str]) 
         Dictionary with the parameters to be written in the MRCC input file. The keys are the input keyword and the values are the input values.
     """
 
-    with Path.open(file_path, "w") as file_path:
+    with Path.open(file_path, "w") as file_path:  # type: ignore[arg-type, assignment] # FIX ME
         # Write the MRCC input file
         for key, value in parameters.items():
-            file_path.write(f"{key}={value}\n")
+            file_path.write(f"{key}={value}\n")  # type: ignore[union-attr] # FIX ME
 
         if "geom" not in parameters:
             # If the geometry is not provided in the MRCC blocks, write it here.
             ghost_list = []  # List of indices of the ghost atoms.
-            file_path.write(f"geom=xyz\n{len(atoms)}\n\n")
+            file_path.write(f"geom=xyz\n{len(atoms)}\n\n")  # type: ignore[union-attr] # FIX ME
             for atom_idx, atom in enumerate(atoms):
                 if atom.tag == 71:  # 71 is ascii G (Ghost)
                     ghost_list += [atom_idx + 1]
 
                 symbol = atom.symbol
                 position = atom.position
-                file_path.write(
+                file_path.write(  # type: ignore[union-attr] # FIX ME
                     f"{symbol.ljust(3)} {position[0]:-16.11f} {position[1]:-16.11f} {position[2]:-16.11f}\n"
                 )
 
             if ghost_list and "ghost" not in parameters:
-                file_path.write("\nghost=serialno\n")
-                file_path.write(",".join([str(atom_idx) for atom_idx in ghost_list]))
+                file_path.write("\nghost=serialno\n")  # type: ignore[union-attr] # FIX ME
+                file_path.write(",".join([str(atom_idx) for atom_idx in ghost_list]))  # type: ignore[union-attr] # FIX ME
 
 
 def read_energy(lines: list[str]) -> MRCCEnergyInfo:
@@ -122,15 +122,15 @@ def read_energy(lines: list[str]) -> MRCCEnergyInfo:
 
     for line in lines:
         if "FINAL HARTREE-FOCK ENERGY" in line or "FINAL KOHN-SHAM ENERGY" in line:
-            energy_dict["scf_energy"] = float(line.split()[-2]) * Hartree
+            energy_dict["scf_energy"] = float(line.split()[-2]) * Hartree  # type: ignore[assignment] # FIX ME
         elif "MP2 correlation energy" in line:
-            energy_dict["mp2_corr_energy"] = float(line.split()[-1]) * Hartree
+            energy_dict["mp2_corr_energy"] = float(line.split()[-1]) * Hartree  # type: ignore[assignment] # FIX ME
         elif "CCSD correlation energy" in line:
-            energy_dict["ccsd_corr_energy"] = float(line.split()[-1]) * Hartree
+            energy_dict["ccsd_corr_energy"] = float(line.split()[-1]) * Hartree  # type: ignore[assignment] # FIX ME
         elif "CCSD(T) correlation energy" in line:
-            energy_dict["ccsdt_corr_energy"] = float(line.split()[-1]) * Hartree
+            energy_dict["ccsdt_corr_energy"] = float(line.split()[-1]) * Hartree  # type: ignore[assignment] # FIX ME
 
-    return energy_dict
+    return energy_dict  # type: ignore[return-value] # FIX ME
 
 
 def read_mrcc_outputs(output_file_path: Path | str) -> MRCCEnergyInfo:
@@ -152,7 +152,7 @@ def read_mrcc_outputs(output_file_path: Path | str) -> MRCCEnergyInfo:
         - ccsd_corr_energy : float | None <-- CCSD correlation energy.
         - ccsdt_corr_energy : float | None <-- CCSD(T) correlation energy.
     """
-    with Path.open(output_file_path) as output_textio:
+    with Path.open(output_file_path) as output_textio:  # type: ignore[arg-type] # FIX ME
         lines = output_textio.readlines()
 
     energy_dict = read_energy(lines)

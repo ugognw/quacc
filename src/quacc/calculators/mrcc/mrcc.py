@@ -19,7 +19,7 @@ if TYPE_CHECKING:
     from ase.atoms import Atoms
     from ase.config import Config
 
-    from quacc.calculators.mrcc.io import MRCCEnergyInfo
+    from quacc.calculators.mrcc.io import MRCCEnergyInfo  # type: ignore[attr-defined] # FIX ME
 
 
 def _get_version_from_mrcc_header(mrcc_header: str) -> str:
@@ -38,7 +38,7 @@ def _get_version_from_mrcc_header(mrcc_header: str) -> str:
     """
 
     match = re.search(r"Release date: (.*)$", mrcc_header, re.M)
-    return match.group(1)
+    return match.group(1)  # type: ignore[union-attr] # FIX ME
 
 
 class MrccProfile(BaseProfile):
@@ -53,7 +53,7 @@ class MrccProfile(BaseProfile):
         str
             The version of the MRCC executable normally in Month DD, YYYY.
         """
-        stdout = read_stdout([self.command, "does_not_exist"])
+        stdout = read_stdout([self.command, "does_not_exist"])  # type: ignore[no-untyped-call] # FIX ME
         return _get_version_from_mrcc_header(stdout)
 
     def get_calculator_command(self, inputfile: str) -> list[str]:
@@ -118,7 +118,7 @@ class MrccTemplate(CalculatorTemplate):
         None
         """
         profile.run(
-            directory, self.inputname, self.outputname, errorfile=self.errorname
+            directory, self.inputname, self.outputname, errorfile=self.errorname  # type: ignore[arg-type] # FIX ME
         )
 
     def write_input(
@@ -154,9 +154,9 @@ class MrccTemplate(CalculatorTemplate):
         kw = {"charge": 0, "mult": 1, "calc": "PBE", "basis": "def2-SVP"}
         kw |= parameters
 
-        write_mrcc(directory / self.inputname, atoms, kw)
+        write_mrcc(directory / self.inputname, atoms, kw)  # type: ignore[arg-type, operator] # FIX ME
 
-    def read_results(self, directory: Path | str) -> MRCCEnergyInfo:
+    def read_results(self, directory: Path | str) -> MRCCEnergyInfo:  # type: ignore[override] # FIX ME
         """
         Reads the MRCC output files.
 
@@ -175,10 +175,10 @@ class MrccTemplate(CalculatorTemplate):
             - ccsd_corr_energy : float <-- CCSD correlation energy.
             - ccsdt_corr_energy : float <-- CCSD(T) correlation energy.
         """
-        return read_mrcc_outputs(output_file_path=directory / self.outputname)
+        return read_mrcc_outputs(output_file_path=directory / self.outputname)  # type: ignore[operator] # FIX ME
 
-    def load_profile(self, cfg: Config, **kwargs) -> MrccProfile:
-        return MrccProfile.from_config(cfg, self.name, **kwargs)
+    def load_profile(self, cfg: Config, **kwargs) -> MrccProfile:  # type: ignore[no-untyped-def] # FIX ME
+        return MrccProfile.from_config(cfg, self.name, **kwargs)  # type: ignore[no-any-return, no-untyped-call] # FIX ME
 
 
 class MRCC(GenericFileIOCalculator):
@@ -186,7 +186,7 @@ class MRCC(GenericFileIOCalculator):
     Class for performing MRCC calculations.
     """
 
-    def __init__(
+    def __init__(  # type: ignore[no-untyped-def] # FIX ME
         self, *, profile: MrccProfile = None, directory: str | Path = ".", **kwargs
     ) -> None:
         """
@@ -225,7 +225,7 @@ class MRCC(GenericFileIOCalculator):
         None
         """
 
-        super().__init__(
+        super().__init__(  # type: ignore[no-untyped-call] # FIX ME
             template=MrccTemplate(),
             profile=profile,
             directory=directory,

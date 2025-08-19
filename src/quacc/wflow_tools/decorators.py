@@ -16,7 +16,7 @@ Flow = Callable[..., Any]
 Subflow = Callable[..., Any]
 
 
-def job(_func: Callable[..., Any] | None = None, **kwargs) -> Job:
+def job(_func: Callable[..., Any] | None = None, **kwargs) -> Job:  # type: ignore[no-untyped-def] # FIX ME
     """
     Decorator for individual compute jobs. This is a `#!Python @job` decorator. Think of
     each `#!Python @job`-decorated function as an individual SLURM job, if that helps.
@@ -151,49 +151,49 @@ def job(_func: Callable[..., Any] | None = None, **kwargs) -> Job:
     if settings.WORKFLOW_ENGINE == "covalent":
         import covalent as ct
 
-        return ct.electron(_func, **kwargs)
+        return ct.electron(_func, **kwargs)  # type: ignore[no-any-return] # FIX ME
     elif settings.WORKFLOW_ENGINE == "dask":
         from dask import delayed
 
         # See https://github.com/dask/dask/issues/10733
 
         @wraps(_func)
-        def wrapper(*f_args, **f_kwargs):
+        def wrapper(*f_args, **f_kwargs):  # type: ignore[no-untyped-def] # FIX ME
             return _func(*f_args, **f_kwargs)
 
-        return Delayed_(delayed(wrapper, **kwargs))
+        return Delayed_(delayed(wrapper, **kwargs))  # type: ignore[no-untyped-call] # FIX ME
     elif settings.WORKFLOW_ENGINE == "jobflow":
         from jobflow import job as jf_job
 
-        return jf_job(_func, **kwargs)
+        return jf_job(_func, **kwargs)  # type: ignore[no-any-return] # FIX ME
     elif settings.WORKFLOW_ENGINE == "parsl":
         from parsl import python_app
 
         wrapped_fn = _get_parsl_wrapped_func(_func, kwargs)
 
-        return python_app(wrapped_fn, **kwargs)
+        return python_app(wrapped_fn, **kwargs)  # type: ignore[no-any-return] # FIX ME
     elif settings.WORKFLOW_ENGINE == "redun":
         from redun import task
 
-        return task(_func, namespace=_func.__module__, **kwargs)
+        return task(_func, namespace=_func.__module__, **kwargs)  # type: ignore[no-any-return] # FIX ME
     elif settings.WORKFLOW_ENGINE == "prefect":
         from prefect import task
 
         if settings.PREFECT_AUTO_SUBMIT:
 
             @wraps(_func)
-            def wrapper(*f_args, **f_kwargs):
+            def wrapper(*f_args, **f_kwargs):  # type: ignore[no-untyped-def] # FIX ME
                 decorated = task(_func, **kwargs)
                 return decorated.submit(*f_args, **f_kwargs)
 
             return wrapper
         else:
-            return task(_func, **kwargs)
+            return task(_func, **kwargs)  # type: ignore[no-any-return] # FIX ME
     else:
         return _func
 
 
-def flow(_func: Callable[..., Any] | None = None, **kwargs) -> Flow:
+def flow(_func: Callable[..., Any] | None = None, **kwargs) -> Flow:  # type: ignore[no-untyped-def] # FIX ME
     """
     Decorator for workflows, which consist of at least one compute job. This is a
     `#!Python @flow` decorator.
@@ -345,18 +345,18 @@ def flow(_func: Callable[..., Any] | None = None, **kwargs) -> Flow:
     elif settings.WORKFLOW_ENGINE == "covalent":
         import covalent as ct
 
-        return ct.lattice(_func, **kwargs)
+        return ct.lattice(_func, **kwargs)  # type: ignore[no-any-return] # FIX ME
     elif settings.WORKFLOW_ENGINE == "redun":
         from redun import task
 
-        return task(_func, namespace=_func.__module__, **kwargs)
+        return task(_func, namespace=_func.__module__, **kwargs)  # type: ignore[no-any-return] # FIX ME
     elif settings.WORKFLOW_ENGINE == "prefect":
         return _get_prefect_wrapped_flow(_func, settings, **kwargs)
     else:
         return _func
 
 
-def subflow(_func: Callable[..., Any] | None = None, **kwargs) -> Subflow:
+def subflow(_func: Callable[..., Any] | None = None, **kwargs) -> Subflow:  # type: ignore[no-untyped-def] # FIX ME
     """
     Decorator for (dynamic) sub-workflows. This is a `#!Python @subflow` decorator.
 
@@ -559,7 +559,7 @@ def subflow(_func: Callable[..., Any] | None = None, **kwargs) -> Subflow:
     elif settings.WORKFLOW_ENGINE == "covalent":
         import covalent as ct
 
-        return ct.electron(ct.lattice(_func), **kwargs)
+        return ct.electron(ct.lattice(_func), **kwargs)  # type: ignore[no-any-return] # FIX ME
     elif settings.WORKFLOW_ENGINE == "dask":
         from dask.delayed import delayed
         from dask.distributed import worker_client
@@ -567,31 +567,31 @@ def subflow(_func: Callable[..., Any] | None = None, **kwargs) -> Subflow:
         # See https://github.com/dask/dask/issues/10733
 
         @wraps(_func)
-        def wrapper(*f_args, **f_kwargs):
+        def wrapper(*f_args, **f_kwargs):  # type: ignore[no-untyped-def] # FIX ME
             with worker_client() as client:
                 futures = client.compute(_func(*f_args, **f_kwargs))
                 return client.gather(futures)
 
-        return delayed(wrapper, **kwargs)
+        return delayed(wrapper, **kwargs)  # type: ignore[no-any-return] # FIX ME
     elif settings.WORKFLOW_ENGINE == "parsl":
         from parsl import join_app
 
         wrapped_fn = _get_parsl_wrapped_func(_func, kwargs)
 
-        return join_app(wrapped_fn, **kwargs)
+        return join_app(wrapped_fn, **kwargs)  # type: ignore[no-any-return] # FIX ME
     elif settings.WORKFLOW_ENGINE == "prefect":
         return _get_prefect_wrapped_flow(_func, settings, **kwargs)
     elif settings.WORKFLOW_ENGINE == "redun":
         from redun import task
 
-        return task(_func, namespace=_func.__module__, **kwargs)
+        return task(_func, namespace=_func.__module__, **kwargs)  # type: ignore[no-any-return] # FIX ME
     else:
         return _func
 
 
 def _get_parsl_wrapped_func(
-    func: Callable, decorator_kwargs: dict[str, Any]
-) -> Callable:
+    func: Callable, decorator_kwargs: dict[str, Any]  # type: ignore[type-arg] # FIX ME
+) -> Callable:  # type: ignore[type-arg] # FIX ME
     """
     Wrap a function to handle special Parsl arguments.
 
@@ -615,7 +615,7 @@ def _get_parsl_wrapped_func(
         "parsl_resource_specification", {}
     )
 
-    def wrapper(
+    def wrapper(  # type: ignore[no-untyped-def] # FIX ME
         *f_args,
         walltime=walltime,  # noqa: ARG001
         parsl_resource_specification=parsl_resource_specification,  # noqa: ARG001
@@ -630,9 +630,9 @@ def _get_parsl_wrapped_func(
     return wrapper
 
 
-def _get_prefect_wrapped_flow(
-    _func: Callable, settings: QuaccSettings, **kwargs
-) -> Callable:
+def _get_prefect_wrapped_flow(  # type: ignore[no-untyped-def] # FIX ME
+    _func: Callable, settings: QuaccSettings, **kwargs  # type: ignore[type-arg] # FIX ME
+) -> Callable:  # type: ignore[type-arg] # FIX ME
     from prefect import flow as prefect_flow
     from prefect.futures import resolve_futures_to_results
     from prefect.utilities.asyncutils import is_async_fn
@@ -641,25 +641,25 @@ def _get_prefect_wrapped_flow(
         if settings.PREFECT_RESOLVE_FLOW_RESULTS:
 
             @wraps(_func)
-            async def async_wrapper(*f_args, **f_kwargs):
+            async def async_wrapper(*f_args, **f_kwargs):  # type: ignore[no-untyped-def] # FIX ME
                 result = await _func(*f_args, **f_kwargs)
                 return resolve_futures_to_results(result)
 
-            return prefect_flow(async_wrapper, validate_parameters=False, **kwargs)
+            return prefect_flow(async_wrapper, validate_parameters=False, **kwargs)  # type: ignore[no-any-return] # FIX ME
 
         else:
-            return prefect_flow(_func, validate_parameters=False, **kwargs)
+            return prefect_flow(_func, validate_parameters=False, **kwargs)  # type: ignore[no-any-return] # FIX ME
     else:
         if settings.PREFECT_RESOLVE_FLOW_RESULTS:
 
             @wraps(_func)
-            def sync_wrapper(*f_args, **f_kwargs):
+            def sync_wrapper(*f_args, **f_kwargs):  # type: ignore[no-untyped-def] # FIX ME
                 result = _func(*f_args, **f_kwargs)
                 return resolve_futures_to_results(result)
 
-            return prefect_flow(sync_wrapper, validate_parameters=False, **kwargs)
+            return prefect_flow(sync_wrapper, validate_parameters=False, **kwargs)  # type: ignore[no-any-return] # FIX ME
         else:
-            return prefect_flow(_func, validate_parameters=False, **kwargs)
+            return prefect_flow(_func, validate_parameters=False, **kwargs)  # type: ignore[no-any-return] # FIX ME
 
 
 class Delayed_:
@@ -669,11 +669,11 @@ class Delayed_:
 
     __slots__ = ("func",)
 
-    def __init__(self, func):
+    def __init__(self, func):  # type: ignore[no-untyped-def] # FIX ME
         self.func = func
 
-    def __reduce__(self):
+    def __reduce__(self):  # type: ignore[no-untyped-def] # FIX ME
         return (Delayed_, (self.func,))
 
-    def __call__(self, *args, **kwargs):
+    def __call__(self, *args, **kwargs):  # type: ignore[no-untyped-def] # FIX ME
         return self.func(*args, **kwargs)

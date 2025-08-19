@@ -155,7 +155,7 @@ class VaspSummarize:
             directory=directory,
             move_magmoms=self.move_magmoms,
             additional_fields=self.additional_fields,
-        ).run(final_atoms, initial_atoms)
+        ).run(final_atoms, initial_atoms)  # type: ignore[arg-type] # FIX ME
 
         if nsteps := len([f for f in os.listdir(directory) if f.startswith("step")]):
             intermediate_vasp_task_docs = {
@@ -197,7 +197,7 @@ class VaspSummarize:
             | base_task_doc
             | additional_fields
         )
-        return clean_dict(unsorted_task_doc)
+        return clean_dict(unsorted_task_doc)  # type: ignore[return-value] # FIX ME
 
     def ase_opt(
         self, optimizer: Optimizer, trajectory: list[Atoms] | None = None
@@ -230,8 +230,8 @@ class VaspSummarize:
         )
 
         vasp_summary = self.run(final_atoms)
-        unsorted_task_doc = recursive_dict_merge(vasp_summary, opt_run_summary)
-        return clean_dict(unsorted_task_doc)
+        unsorted_task_doc = recursive_dict_merge(vasp_summary, opt_run_summary)  # type: ignore[arg-type] # FIX ME
+        return clean_dict(unsorted_task_doc)  # type: ignore[return-value] # FIX ME
 
 
 def bader_runner(path: Path | str) -> BaderSchema:
@@ -260,7 +260,7 @@ def bader_runner(path: Path | str) -> BaderSchema:
             msg = f"Could not find {f} in {path}."
             raise FileNotFoundError(msg)
 
-    bader_stats = bader_analysis_from_path(path)
+    bader_stats = bader_analysis_from_path(path)  # type: ignore[arg-type] # FIX ME
 
     # Store the partial charge, which is much more useful than the raw charge
     # and is more intuitive than the charge transferred. An atom with a positive
@@ -274,7 +274,7 @@ def bader_runner(path: Path | str) -> BaderSchema:
     for k in ["charge", "charge_transfer", "reference_used", "magmom"]:
         bader_stats.pop(k, None)
 
-    return bader_stats
+    return bader_stats  # type: ignore[return-value] # FIX ME
 
 
 def chargemol_runner(
@@ -318,4 +318,4 @@ def chargemol_runner(
         raise OSError(msg)
 
     # Run Chargemol analysis
-    return ChargemolAnalysis(path=path, atomic_densities_path=atomic_densities_path)
+    return ChargemolAnalysis(path=path, atomic_densities_path=atomic_densities_path)  # type: ignore[return-value] # FIX ME

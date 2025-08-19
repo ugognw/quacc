@@ -30,7 +30,7 @@ LOGGER = getLogger(__name__)
 
 
 @job
-def qmof_relax_job(
+def qmof_relax_job(  # type: ignore[no-untyped-def] # FIX ME
     atoms: Atoms,
     relax_cell: bool = True,
     run_prerelax: bool = True,
@@ -105,15 +105,15 @@ def qmof_relax_job(
 
     # 5. Static Calculation
     summary5 = _static(atoms, copy_files=copy_files, **calc_kwargs)
-    summary5["prerelax_lowacc"] = summary1 if run_prerelax else None
-    summary5["position_relax_lowacc"] = summary2
-    summary5["volume_relax_lowacc"] = summary3 if relax_cell else None
-    summary5["double_relax"] = summary4
+    summary5["prerelax_lowacc"] = summary1 if run_prerelax else None  # type: ignore[typeddict-unknown-key] # FIX ME
+    summary5["position_relax_lowacc"] = summary2  # type: ignore[typeddict-unknown-key] # FIX ME
+    summary5["volume_relax_lowacc"] = summary3 if relax_cell else None  # type: ignore[typeddict-unknown-key] # FIX ME
+    summary5["double_relax"] = summary4  # type: ignore[typeddict-unknown-key] # FIX ME
 
-    return summary5
+    return summary5  # type: ignore[return-value] # FIX ME
 
 
-def _prerelax(
+def _prerelax(  # type: ignore[no-untyped-def] # FIX ME
     atoms: Atoms,
     copy_files: SourceDirectory | dict[SourceDirectory, Filenames] | None = None,
     **calc_kwargs,
@@ -158,7 +158,7 @@ def _prerelax(
     )
 
 
-def _loose_relax_positions(
+def _loose_relax_positions(  # type: ignore[no-untyped-def] # FIX ME
     atoms: Atoms,
     copy_files: SourceDirectory | dict[SourceDirectory, Filenames] | None = None,
     **calc_kwargs,
@@ -204,7 +204,7 @@ def _loose_relax_positions(
     )
 
 
-def _loose_relax_cell(
+def _loose_relax_cell(  # type: ignore[no-untyped-def] # FIX ME
     atoms: Atoms,
     copy_files: SourceDirectory | dict[SourceDirectory, Filenames] | None = None,
     **calc_kwargs,
@@ -248,7 +248,7 @@ def _loose_relax_cell(
     )
 
 
-def _double_relax(
+def _double_relax(  # type: ignore[no-untyped-def] # FIX ME
     atoms: Atoms,
     copy_files: SourceDirectory | dict[SourceDirectory, Filenames] | None = None,
     relax_cell: bool = True,
@@ -315,7 +315,7 @@ def _double_relax(
     return [summary1, summary2]
 
 
-def _static(
+def _static(  # type: ignore[no-untyped-def] # FIX ME
     atoms: Atoms,
     copy_files: SourceDirectory | dict[SourceDirectory, Filenames] | None = None,
     **calc_kwargs,

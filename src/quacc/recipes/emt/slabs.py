@@ -24,7 +24,7 @@ def bulk_to_slabs_flow(
     run_static: bool = True,
     make_slabs_kwargs: dict[str, Any] | None = None,
     job_params: dict[str, dict[str, Any]] | None = None,
-    job_decorators: dict[str, Callable | None] | None = None,
+    job_decorators: dict[str, Callable | None] | None = None,  # type: ignore[type-arg] # FIX ME
 ) -> list[RunSchema | OptSchema]:
     """
     Workflow consisting of:
@@ -61,14 +61,14 @@ def bulk_to_slabs_flow(
         [OptSchema][quacc.schemas.ase.Summarize.opt] for each slab.
         See the return type-hint for the data structure.
     """
-    relax_job_, static_job_ = customize_funcs(
+    relax_job_, static_job_ = customize_funcs(  # type: ignore[misc] # FIX ME
         ["relax_job", "static_job"],
         [relax_job, static_job],
         param_swaps=job_params,
         decorators=job_decorators,
     )
 
-    return bulk_to_slabs_subflow(
+    return bulk_to_slabs_subflow(  # type: ignore[no-any-return] # FIX ME
         atoms,
         relax_job_,
         static_job=static_job_ if run_static else None,

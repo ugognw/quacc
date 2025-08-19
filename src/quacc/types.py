@@ -72,7 +72,7 @@ if TYPE_CHECKING:
         optimizer: Dynamics
         optimizer_kwargs: dict[str, Any] | None
         store_intermediate_results: bool
-        fn_hook: Callable | None
+        fn_hook: Callable | None  # type: ignore[type-arg] # FIX ME
         run_kwargs: dict[str, Any] | None
 
     class MDParams(TypedDict, total=False):
@@ -139,8 +139,8 @@ if TYPE_CHECKING:
 
         energy: float  # electronic energy in eV
         taskdoc: dict[str, Any]  # Output from `emmet.core.qc_tasks.TaskDoc`
-        hessian: NotRequired[NDArray]  # Hessian in eV/A^2/amu
-        forces: NotRequired[NDArray]  # forces in eV/A
+        hessian: NotRequired[NDArray]  # type: ignore[type-arg] # Hessian in eV/A^2/amu # FIX ME
+        forces: NotRequired[NDArray]  # type: ignore[type-arg] # forces in eV/A # FIX ME
 
     class VaspJobKwargs(TypedDict, total=False):
         """
@@ -154,7 +154,7 @@ if TYPE_CHECKING:
         backup: bool  # default = True
         auto_npar: bool  # default = False
         auto_gamma: bool  # default = True
-        settings_override: dict | None  # default = None
+        settings_override: dict | None  # type: ignore[type-arg] # default = None # FIX ME
         copy_magmom: bool  # default = False
         auto_continue: bool  # default = False
 
@@ -169,7 +169,7 @@ if TYPE_CHECKING:
         skip_over_errors: bool  # default = False
         gzipped_output: bool  # default = False
         checkpoint: bool  # default = False
-        terminate_func: Callable | None  # default = None
+        terminate_func: Callable | None  # type: ignore[type-arg] # default = None # FIX ME
         terminate_on_nonzero_returncode: bool  # default = False
 
     # ----------- MRCC calculator type hints -----------
@@ -386,7 +386,7 @@ if TYPE_CHECKING:
         completed_at: str
         task_name: str
         output_file_paths: dict[str, str]
-        bader: dict
+        bader: dict  # type: ignore[type-arg] # FIX ME
         run_type: RunType
         task_type: TaskType
         calc_type: CalcType
@@ -414,7 +414,7 @@ if TYPE_CHECKING:
         """Type hint associated with emmet.core.tasks.CustodianDoc."""
 
         corrections: list[Any]
-        job: dict
+        job: dict  # type: ignore[type-arg] # FIX ME
 
     class AnalysisDoc(TypedDict):
         """Type hint associated with emmet.core.tasks.AnalysisDoc."""
@@ -539,7 +539,7 @@ if TYPE_CHECKING:
         undeformed_result: RunSchema | OptSchema
         elasticity_doc: ElasticityDoc
 
-    class VibThermoSchema(VibSchema, ThermoSchema):
+    class VibThermoSchema(VibSchema, ThermoSchema):  # type: ignore[misc] # FIX ME
         """Combined Vibrations and Thermo schema"""
 
     # ----------- Schema (phonons) type hints -----------
@@ -547,31 +547,31 @@ if TYPE_CHECKING:
     class ThermalProperties(TypedDict):
         """Type hint associated with PhononSchema."""
 
-        temperatures: NDArray
-        free_energy: NDArray
-        entropy: NDArray
-        heat_capacity: NDArray
+        temperatures: NDArray  # type: ignore[type-arg] # FIX ME
+        free_energy: NDArray  # type: ignore[type-arg] # FIX ME
+        entropy: NDArray  # type: ignore[type-arg] # FIX ME
+        heat_capacity: NDArray  # type: ignore[type-arg] # FIX ME
 
     class MeshProperties(TypedDict):
         """Type hint associated with PhononSchema."""
 
-        qpoints: NDArray
-        weights: NDArray
-        frequencies: NDArray
-        eigenvectors: NDArray
-        group_velocities: NDArray
+        qpoints: NDArray  # type: ignore[type-arg] # FIX ME
+        weights: NDArray  # type: ignore[type-arg] # FIX ME
+        frequencies: NDArray  # type: ignore[type-arg] # FIX ME
+        eigenvectors: NDArray  # type: ignore[type-arg] # FIX ME
+        group_velocities: NDArray  # type: ignore[type-arg] # FIX ME
 
     class DosProperties(TypedDict):
         """Type hint associated with PhononSchema."""
 
-        frequency_points: NDArray
-        total_dos: NDArray
+        frequency_points: NDArray  # type: ignore[type-arg] # FIX ME
+        total_dos: NDArray  # type: ignore[type-arg] # FIX ME
 
     class PhononResults(TypedDict):
         thermal_properties: ThermalProperties
         mesh_properties: MeshProperties
         total_dos: DosProperties
-        force_constants: NDArray
+        force_constants: NDArray  # type: ignore[type-arg] # FIX ME
 
     class PhonopyMetadata(TypedDict):
         """Type hint associated with PhononSchema."""
@@ -606,7 +606,7 @@ if TYPE_CHECKING:
         spin_moments: list[float]
         dipoles: list[float]
         bond_order_sums: list[float]
-        bond_order_dict: dict
+        bond_order_dict: dict  # type: ignore[type-arg] # FIX ME
         rsquared_moments: list[float]
         rcubed_moments: list[float]
         rfourth_moments: list[float]
@@ -622,7 +622,7 @@ if TYPE_CHECKING:
         ddec: DDECSchema
         cm5: CM5Schema
 
-    class VaspSchema(RunSchema, TaskDoc):
+    class VaspSchema(RunSchema, TaskDoc):  # type: ignore[misc] # FIX ME
         """Type hint associated with [quacc.schemas.vasp.VaspSummarize.run][]"""
 
         bader: BaderSchema
@@ -653,7 +653,7 @@ if TYPE_CHECKING:
         volume_relax_lowacc: VaspSchema | None
         double_relax: VaspSchema
 
-    class VaspASEOptSchema(VaspSchema, OptSchema):
+    class VaspASEOptSchema(VaspSchema, OptSchema):  # type: ignore[misc] # FIX ME
         """Type hint associated with VASP relaxations run via ASE"""
 
     # ----------- Recipe (Espresso) type hints -----------
@@ -711,13 +711,13 @@ if TYPE_CHECKING:
         relax_reactant: OptSchema
         relax_product: OptSchema
         initial_images: list[Atoms]
-        neb_results: dict
+        neb_results: dict  # type: ignore[type-arg] # FIX ME
 
     class NebTsSchema(TypedDict):
         relax_reactant: OptSchema
         relax_product: OptSchema
         initial_images: list[Atoms]
-        neb_results: dict
+        neb_results: dict  # type: ignore[type-arg] # FIX ME
         ts_results: OptSchema
 
     class GeodesicSchema(TypedDict):

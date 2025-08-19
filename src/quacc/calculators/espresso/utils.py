@@ -41,7 +41,7 @@ def get_pseudopotential_info(
     dict[str, str]
         The pseudopotentials dictionary, e.g. {"O": "O.pbe-n-kjpaw_psl.0.1.UPF"}
     """
-    unique_elements = list(set(atoms.get_chemical_symbols()))
+    unique_elements = list(set(atoms.get_chemical_symbols()))  # type: ignore[no-untyped-call] # FIX ME
     ecutwfc, ecutrho = 0, 0
     pseudopotentials = {}
     for element in unique_elements:
@@ -110,10 +110,10 @@ def grid_copy_files(
             [Path("_ph0", "pwscf.wfc*"), Path("_ph0", "pwscf.save", "*")]
         )
 
-    return files_to_copy
+    return files_to_copy  # type: ignore[return-value] # FIX ME
 
 
-def grid_prepare_repr(patterns: dict[str, Any], nblocks: int) -> list:
+def grid_prepare_repr(patterns: dict[str, Any], nblocks: int) -> list:  # type: ignore[type-arg] # FIX ME
     """
     Function that prepares the representations for the grid calculation.
 
@@ -200,7 +200,7 @@ def espresso_prepare_dir(outdir: str | Path, binary: str = "pw") -> dict[str, An
         "postahc": {"input": {"ahc_dir": "ahc_dir/", "flvec": "matdyn.modes"}},
     }
 
-    return outkeys.get(binary, {})
+    return outkeys.get(binary, {})  # type: ignore[return-value] # FIX ME
 
 
 def prepare_copy_files(parameters: dict[str, Any], binary: str = "pw") -> list[Path]:

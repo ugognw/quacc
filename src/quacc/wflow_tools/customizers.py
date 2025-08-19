@@ -13,7 +13,7 @@ if TYPE_CHECKING:
     from typing import Any
 
 
-def strip_decorator(func: Callable) -> Callable:
+def strip_decorator(func: Callable) -> Callable:  # type: ignore[type-arg] # FIX ME
     """
     Strip the decorators from a function.
 
@@ -81,7 +81,7 @@ def strip_decorator(func: Callable) -> Callable:
     return func
 
 
-def redecorate(func: Callable, decorator: Callable | None) -> Callable:
+def redecorate(func: Callable, decorator: Callable | None) -> Callable:  # type: ignore[type-arg] # FIX ME
     """
     Redecorate a pre-decorated function with a custom decorator.
 
@@ -103,10 +103,10 @@ def redecorate(func: Callable, decorator: Callable | None) -> Callable:
 
 
 def update_parameters(
-    func: Callable,
+    func: Callable,  # type: ignore[type-arg] # FIX ME
     params: dict[str, Any],
     decorator: Literal["job", "flow", "subflow"] | None = "job",
-) -> Callable:
+) -> Callable:  # type: ignore[type-arg] # FIX ME
     """
     Update the parameters of a (potentially decorated) function.
 
@@ -147,11 +147,11 @@ def update_parameters(
 
 def customize_funcs(
     names: list[str] | str,
-    funcs: list[Callable] | Callable,
+    funcs: list[Callable] | Callable,  # type: ignore[type-arg] # FIX ME
     param_defaults: dict[str, dict[str, Any]] | None = None,
     param_swaps: dict[str, dict[str, Any]] | None = None,
-    decorators: dict[str, Callable | None] | None = None,
-) -> tuple[Callable, ...] | Callable:
+    decorators: dict[str, Callable | None] | None = None,  # type: ignore[type-arg] # FIX ME
+) -> tuple[Callable, ...] | Callable:  # type: ignore[type-arg] # FIX ME
     """
     Customize a set of functions with decorators and common parameters.
 

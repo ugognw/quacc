@@ -130,7 +130,7 @@ def copy_atoms(atoms: Atoms) -> Atoms:
     except Exception:
         # Needed because of ASE issue #1084
         calc = atoms.calc
-        atoms = atoms.copy()
+        atoms = atoms.copy()  # type: ignore[no-untyped-call] # FIX ME
         atoms.calc = calc
 
     return atoms
@@ -151,20 +151,20 @@ def get_spin_multiplicity_attribute(atoms: Atoms) -> int | None:
         Spin multiplicity of the Atoms object
     """
     if getattr(atoms, "spin_multiplicity", None):
-        return atoms.spin_multiplicity  # type: ignore[attr-defined]
+        return atoms.spin_multiplicity  # type: ignore[attr-defined, no-any-return] # FIX ME
 
     try:
-        results = atoms.calc.results  # type: ignore[attr-defined]
+        results = atoms.calc.results
     except AttributeError:
         results = None
     if results:
         if results.get("magmom", None) is not None:
-            return round(abs(results["magmom"])) + 1
+            return round(abs(results["magmom"])) + 1  # type: ignore[no-any-return] # FIX ME
         if results.get("magmoms", None) is not None:
-            return round(np.abs(results["magmoms"].sum())) + 1
+            return round(np.abs(results["magmoms"].sum())) + 1  # type: ignore[no-any-return] # FIX ME
 
-    if atoms.has("initial_magmoms"):
-        return round(np.abs(atoms.get_initial_magnetic_moments().sum())) + 1
+    if atoms.has("initial_magmoms"):  # type: ignore[no-untyped-call] # FIX ME
+        return round(np.abs(atoms.get_initial_magnetic_moments().sum())) + 1  # type: ignore[no-any-return, no-untyped-call] # FIX ME
 
     LOGGER.warning("Could not determine spin multiplicity. Assuming 1.")
     return 1
@@ -189,7 +189,7 @@ def get_final_atoms_from_dynamics(dynamics: Dynamics | Filter) -> Atoms:
     )
 
 
-def perturb(mol: Atoms, matrix: list[list[float]] | NDArray, scale: float) -> Atoms:
+def perturb(mol: Atoms, matrix: list[list[float]] | NDArray, scale: float) -> Atoms:  # type: ignore[type-arg] # FIX ME
     """
     Perturb each atom in a molecule by a (scaled) 1x3 vector, reflecting e.g. a vibrational normal mode.
 
@@ -212,9 +212,9 @@ def perturb(mol: Atoms, matrix: list[list[float]] | NDArray, scale: float) -> At
     mol_copy = copy_atoms(mol)
     mode = np.asarray(matrix)
 
-    orig_pos = mol_copy.get_positions()
+    orig_pos = mol_copy.get_positions()  # type: ignore[no-untyped-call] # FIX ME
 
     pos = orig_pos + mode * scale
-    mol_copy.set_positions(pos)
+    mol_copy.set_positions(pos)  # type: ignore[no-untyped-call] # FIX ME
 
     return mol_copy

@@ -21,7 +21,7 @@ def bulk_to_slabs_subflow(
     relax_job: Job,
     static_job: Job | None = None,
     make_slabs_kwargs: dict[str, Any] | None = None,
-) -> list[dict]:
+) -> list[dict]:  # type: ignore[type-arg] # FIX ME
     """
     Workflow consisting of:
 
@@ -71,7 +71,7 @@ def slab_to_ads_subflow(
     relax_job: Job,
     static_job: Job | None,
     make_ads_kwargs: dict[str, Any] | None = None,
-) -> list[dict]:
+) -> list[dict]:  # type: ignore[type-arg] # FIX ME
     """
     Workflow consisting of:
 

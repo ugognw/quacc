@@ -12,7 +12,7 @@ if TYPE_CHECKING:
 
 
 @job
-def partition(list_to_partition: list, num_partitions: int) -> list[Any]:
+def partition(list_to_partition: list, num_partitions: int) -> list[Any]:  # type: ignore[type-arg] # FIX ME
     """
     Given a list, partition it into n roughly equal lists
 
@@ -36,7 +36,7 @@ def partition(list_to_partition: list, num_partitions: int) -> list[Any]:
 
 
 def map_partitioned_lists(
-    func: Callable,
+    func: Callable,  # type: ignore[type-arg] # FIX ME
     num_partitions: int,
     unmapped_kwargs: dict[str, Any] | None = None,
     **mapped_kwargs: list[list[Any]],
@@ -109,8 +109,8 @@ def map_partitioned_lists(
 
 
 @job
-def map_partition(
-    func: Callable, unmapped_kwargs: dict[str, Any] | None = None, **mapped_kwargs
+def map_partition(  # type: ignore[no-untyped-def] # FIX ME
+    func: Callable, unmapped_kwargs: dict[str, Any] | None = None, **mapped_kwargs  # type: ignore[type-arg] # FIX ME
 ) -> list[Any]:
     """
     Job to apply a function to each set of elements in mapped_kwargs.
@@ -133,8 +133,8 @@ def map_partition(
     return kwarg_map(func, unmapped_kwargs=unmapped_kwargs, **mapped_kwargs)
 
 
-def kwarg_map(
-    func: Callable, unmapped_kwargs: dict[str, Any] | None = None, **mapped_kwargs
+def kwarg_map(  # type: ignore[no-untyped-def] # FIX ME
+    func: Callable, unmapped_kwargs: dict[str, Any] | None = None, **mapped_kwargs  # type: ignore[type-arg] # FIX ME
 ) -> list[Any]:
     """
     A helper function for when you want to construct a chain of objects with individual arguments for each one.  Can

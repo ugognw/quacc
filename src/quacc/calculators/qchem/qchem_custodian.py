@@ -29,7 +29,7 @@ def run_custodian(
     qchem_custodian_max_errors: int | DefaultSetting = QuaccDefault,
     qchem_nbo_exe: str | Path | DefaultSetting = QuaccDefault,
     directory: str | Path | None = None,
-) -> list[list[dict]]:
+) -> list[list[dict]]:  # type: ignore[type-arg] # FIX ME
     """
     Function to run QChem Custodian.
 
@@ -85,7 +85,7 @@ def run_custodian(
         else qchem_custodian_max_errors
     )
     qchem_nbo_exe = (
-        settings.QCHEM_NBO_EXE if qchem_nbo_exe == QuaccDefault else qchem_nbo_exe
+        settings.QCHEM_NBO_EXE if qchem_nbo_exe == QuaccDefault else qchem_nbo_exe  # type: ignore[assignment] # FIX ME
     )
 
     # Error handlers for Q-Chem
@@ -109,7 +109,7 @@ def run_custodian(
         directory=directory,
     )
 
-    return c.run()
+    return c.run()  # type: ignore[no-any-return, no-untyped-call] # FIX ME
 
 
 if __name__ == "__main__":

@@ -47,7 +47,7 @@ def run_custodian(
     directory: str | Path | None = None,
     vasp_job_kwargs: VaspJobKwargs | None = None,
     custodian_kwargs: VaspCustodianKwargs | None = None,
-) -> list[list[dict]]:
+) -> list[list[dict]]:  # type: ignore[type-arg] # FIX ME
     """
     Function to run VASP Custodian.
 
@@ -91,7 +91,7 @@ def run_custodian(
 
     # Set defaults
     vasp_parallel_cmd = os.path.expandvars(
-        settings.VASP_PARALLEL_CMD
+        settings.VASP_PARALLEL_CMD  # type: ignore[arg-type] # FIX ME
         if vasp_parallel_cmd == QuaccDefault
         else vasp_parallel_cmd
     )
@@ -152,7 +152,7 @@ def run_custodian(
         if handler_flag not in handlers_dict:
             msg = f"Unknown VASP error handler: {handler_flag}"
             raise ValueError(msg)
-        handlers.append(handlers_dict[handler_flag])
+        handlers.append(handlers_dict[handler_flag])  # type: ignore[index] # FIX ME
 
     validators = []
     if vasp_custodian_validators is None:
@@ -161,7 +161,7 @@ def run_custodian(
         if validator_flag not in validators_dict:
             msg = f"Unknown VASP validator: {validator_flag}"
             raise ValueError(msg)
-        validators.append(validators_dict[validator_flag])
+        validators.append(validators_dict[validator_flag])  # type: ignore[index] # FIX ME
 
     # Populate settings
     full_vasp_cmd = f"{vasp_parallel_cmd} {vasp_cmd}"
@@ -172,7 +172,7 @@ def run_custodian(
     custodian_kwargs = {} if custodian_kwargs is None else custodian_kwargs
     split_vasp_cmd = shlex.split(full_vasp_cmd)
     split_vasp_gamma_cmd = shlex.split(full_vasp_gamma_cmd)
-    vasp_job_kwargs["gamma_vasp_cmd"] = split_vasp_gamma_cmd
+    vasp_job_kwargs["gamma_vasp_cmd"] = split_vasp_gamma_cmd  # type: ignore[typeddict-unknown-key] # FIX ME
 
     # Run with Custodian
     jobs = [VaspJob(split_vasp_cmd, **vasp_job_kwargs)]
@@ -193,4 +193,4 @@ def run_custodian(
         **custodian_kwargs,
     )
 
-    return c.run()
+    return c.run()  # type: ignore[no-any-return, no-untyped-call] # FIX ME

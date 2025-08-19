@@ -23,7 +23,7 @@ if TYPE_CHECKING:
 
 
 @job
-def static_job(
+def static_job(  # type: ignore[no-untyped-def] # FIX ME
     atoms: Atoms, additional_fields: dict[str, Any] | None = None, **calc_kwargs
 ) -> RunSchema:
     """
@@ -44,7 +44,7 @@ def static_job(
         Dictionary of results, specified in [quacc.schemas.ase.Summarize.run][].
         See the type-hint for the data structure.
     """
-    calc = LennardJones(**calc_kwargs)
+    calc = LennardJones(**calc_kwargs)  # type: ignore[no-untyped-call] # FIX ME
     final_atoms = Runner(atoms, calc).run_calc()
 
     return Summarize(
@@ -53,7 +53,7 @@ def static_job(
 
 
 @job
-def relax_job(
+def relax_job(  # type: ignore[no-untyped-def] # FIX ME
     atoms: Atoms,
     opt_params: OptParams | None = None,
     additional_fields: dict[str, Any] | None = None,
@@ -84,8 +84,8 @@ def relax_job(
     """
     opt_params = opt_params or {}
 
-    calc = LennardJones(**calc_kwargs)
-    dyn = Runner(atoms, calc).run_opt(**opt_params)
+    calc = LennardJones(**calc_kwargs)  # type: ignore[no-untyped-call] # FIX ME
+    dyn = Runner(atoms, calc).run_opt(**opt_params)  # type: ignore[arg-type] # FIX ME
 
     return Summarize(
         additional_fields={"name": "LJ Relax"} | (additional_fields or {})
@@ -93,7 +93,7 @@ def relax_job(
 
 
 @job
-def freq_job(
+def freq_job(  # type: ignore[no-untyped-def] # FIX ME
     atoms: Atoms,
     energy: float = 0.0,
     temperature: float = 298.15,
@@ -131,7 +131,7 @@ def freq_job(
     """
     vib_kwargs = vib_kwargs or {}
 
-    calc = LennardJones(**calc_kwargs)
+    calc = LennardJones(**calc_kwargs)  # type: ignore[no-untyped-call] # FIX ME
     vib = Runner(atoms, calc).run_vib(vib_kwargs=vib_kwargs)
 
     return VibSummarize(

@@ -12,7 +12,7 @@ from copy import deepcopy
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-from ase.io.espresso import Namelist
+from ase.io.espresso import Namelist  # type: ignore[attr-defined] # FIX ME
 
 from quacc import Job, flow, job, subflow
 from quacc.calculators.espresso.espresso import EspressoTemplate
@@ -35,7 +35,7 @@ if TYPE_CHECKING:
 
 
 @job
-def phonon_job(
+def phonon_job(  # type: ignore[no-untyped-def] # FIX ME
     copy_files: (
         SourceDirectory
         | list[SourceDirectory]
@@ -118,7 +118,7 @@ def phonon_job(
 
 
 @job
-def q2r_job(
+def q2r_job(  # type: ignore[no-untyped-def] # FIX ME
     copy_files: (
         SourceDirectory | list[SourceDirectory] | dict[SourceDirectory, Filenames]
     ),
@@ -164,7 +164,7 @@ def q2r_job(
 
 
 @job
-def matdyn_job(
+def matdyn_job(  # type: ignore[no-untyped-def] # FIX ME
     copy_files: (
         SourceDirectory | list[SourceDirectory] | dict[SourceDirectory, Filenames]
     ),
@@ -220,7 +220,7 @@ def phonon_dos_flow(
     ) = None,
     prev_outdir: SourceDirectory | None = None,
     job_params: dict[str, Any] | None = None,
-    job_decorators: dict[str, Callable | None] | None = None,
+    job_decorators: dict[str, Callable | None] | None = None,  # type: ignore[type-arg] # FIX ME
 ) -> EspressoPhononDosSchema:
     """
     Function to carry out a phonon DOS calculation. The phonon calculation is carried
@@ -292,10 +292,10 @@ def phonon_dos_flow(
             "input_data": {"input": {"dos": True, "nk1": 32, "nk2": 32, "nk3": 32}}
         },
     }
-    ph_job, fc_job, dos_job = customize_funcs(
+    ph_job, fc_job, dos_job = customize_funcs(  # type: ignore[misc] # FIX ME
         ["phonon_job", "q2r_job", "matdyn_job"],
         [phonon_job, q2r_job, matdyn_job],
-        param_defaults=default_job_params,
+        param_defaults=default_job_params,  # type: ignore[arg-type] # FIX ME
         param_swaps=job_params,
         decorators=job_decorators,
     )
@@ -322,7 +322,7 @@ def grid_phonon_flow(
     prev_outdir: SourceDirectory | None = None,
     nblocks: int = 1,
     job_params: dict[str, Any] | None = None,
-    job_decorators: dict[str, Callable | None] | None = None,
+    job_decorators: dict[str, Callable | None] | None = None,  # type: ignore[type-arg] # FIX ME
 ) -> RunSchema:
     """
     This function performs grid parallelization of a ph.x calculation. Each
@@ -416,11 +416,11 @@ def grid_phonon_flow(
                 Path("**", "wfc*.*"),
                 Path("**", "paw.txt.*"),
             ]
-        return ph_recover_job(copy_files=prev_dirs)
+        return ph_recover_job(copy_files=prev_dirs)  # type: ignore[no-any-return] # FIX ME
 
     @subflow
     def _grid_phonon_subflow(
-        ph_input_data: UserDict | None,
+        ph_input_data: UserDict | None,  # type: ignore[type-arg] # FIX ME
         ph_init_job_results: RunSchema,
         ph_job: Job,
         nblocks: int = 1,
@@ -446,9 +446,9 @@ def grid_phonon_flow(
             A list of results from each phonon job.
         """
         ph_input_data = Namelist(ph_input_data)
-        ph_input_data.to_nested(binary="ph")
+        ph_input_data.to_nested(binary="ph")  # type: ignore[no-untyped-call] # FIX ME
 
-        prev_outdir = ph_init_job_results["parameters"]["input_data"]["inputph"][
+        prev_outdir = ph_init_job_results["parameters"]["input_data"]["inputph"][  # type: ignore[typeddict-item] # FIX ME
             "outdir"
         ]
 
@@ -456,9 +456,9 @@ def grid_phonon_flow(
         for qnum, qdata in ph_init_job_results["results"].items():
             ph_input_data["inputph"]["start_q"] = qnum
             ph_input_data["inputph"]["last_q"] = qnum
-            repr_to_do = grid_prepare_repr(qdata["representations"], nblocks)
+            repr_to_do = grid_prepare_repr(qdata["representations"], nblocks)  # type: ignore[index] # FIX ME
             files_to_copy = grid_copy_files(
-                ph_input_data, prev_outdir, qnum, qdata["qpoint"]
+                ph_input_data, prev_outdir, qnum, qdata["qpoint"]  # type: ignore[arg-type, index] # FIX ME
             )
             for representation in repr_to_do:
                 ph_input_data["inputph"]["start_irr"] = representation[0]
@@ -487,10 +487,10 @@ def grid_phonon_flow(
             job_params.get("ph_job"),
         ),
     }
-    ph_init_job, ph_job, ph_recover_job = customize_funcs(
+    ph_init_job, ph_job, ph_recover_job = customize_funcs(  # type: ignore[misc] # FIX ME
         ["ph_init_job", "ph_job", "ph_recover_job"],
         [phonon_job, phonon_job, phonon_job],
-        param_defaults=default_job_params,
+        param_defaults=default_job_params,  # type: ignore[arg-type] # FIX ME
         param_swaps=job_params,
         decorators=job_decorators,
     )
@@ -500,11 +500,11 @@ def grid_phonon_flow(
         job_params["ph_job"]["input_data"], ph_init_job_results, ph_job, nblocks=nblocks
     )
 
-    return _ph_recover_subflow(grid_results)
+    return _ph_recover_subflow(grid_results)  # type: ignore[no-any-return] # FIX ME
 
 
 @job
-def dvscf_q2r_job(
+def dvscf_q2r_job(  # type: ignore[no-untyped-def] # FIX ME
     copy_files: (
         SourceDirectory
         | list[SourceDirectory]
@@ -581,7 +581,7 @@ def dvscf_q2r_job(
 
 
 @job
-def postahc_job(
+def postahc_job(  # type: ignore[no-untyped-def] # FIX ME
     copy_files: (
         SourceDirectory
         | list[SourceDirectory]

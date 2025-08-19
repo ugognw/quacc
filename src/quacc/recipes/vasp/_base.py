@@ -114,7 +114,7 @@ def run_and_summarize_opt(
         Dictionary of results
     """
     calc_flags = recursive_dict_merge(calc_defaults, calc_swaps)
-    opt_flags = recursive_dict_merge(opt_defaults, opt_params)
+    opt_flags = recursive_dict_merge(opt_defaults, opt_params)  # type: ignore[arg-type] # FIX ME
 
     calc = Vasp(atoms, preset=preset, **calc_flags)
     dyn = Runner(atoms, calc, copy_files=copy_files).run_opt(**opt_flags)
@@ -177,7 +177,7 @@ def run_and_summarize_vib_and_thermo(
     calc_flags = recursive_dict_merge(calc_defaults, calc_swaps)
 
     calc = Vasp(atoms, preset=preset, **calc_flags)
-    vib = Runner(atoms, calc, copy_files=copy_files).run_vib(vib_kwargs=vib_kwargs)
+    vib = Runner(atoms, calc, copy_files=copy_files).run_vib(vib_kwargs=vib_kwargs)  # type: ignore[arg-type] # FIX ME
     return VibSummarize(vib, additional_fields=additional_fields).vib_and_thermo(
         thermo_method, energy=energy, temperature=temperature, pressure=pressure
     )

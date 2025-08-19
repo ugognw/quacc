@@ -82,7 +82,7 @@ def geodesic_interpolate_wrapper(
     product = copy_atoms(product)
 
     # Read the initial geometries.
-    chemical_symbols = reactant.get_chemical_symbols()
+    chemical_symbols = reactant.get_chemical_symbols()  # type: ignore[no-untyped-call] # FIX ME
 
     # First redistribute number of images. Perform interpolation if too few and subsampling if too many images are given
     raw_interpolated_positions = redistribute(
@@ -110,6 +110,6 @@ def geodesic_interpolate_wrapper(
     else:
         geodesic_smoother.smooth(tol=smoother_tol, max_iter=max_iterations)
     return [
-        Atoms(symbols=chemical_symbols, positions=geom)
+        Atoms(symbols=chemical_symbols, positions=geom)  # type: ignore[no-untyped-call] # FIX ME
         for geom in geodesic_smoother.path
     ]

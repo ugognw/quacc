@@ -27,7 +27,7 @@ if TYPE_CHECKING:
 
 
 @job
-def dos_job(
+def dos_job(  # type: ignore[no-untyped-def] # FIX ME
     copy_files: (
         SourceDirectory
         | list[SourceDirectory]
@@ -84,7 +84,7 @@ def dos_job(
 
 
 @job
-def projwfc_job(
+def projwfc_job(  # type: ignore[no-untyped-def] # FIX ME
     copy_files: (
         SourceDirectory
         | list[SourceDirectory]
@@ -143,7 +143,7 @@ def projwfc_job(
 @flow
 def dos_flow(
     atoms: Atoms,
-    job_decorators: dict[str, Callable | None] | None = None,
+    job_decorators: dict[str, Callable | None] | None = None,  # type: ignore[type-arg] # FIX ME
     job_params: dict[str, Any] | None = None,
 ) -> EspressoDosSchema:
     """
@@ -198,10 +198,10 @@ def dos_flow(
         ),
     }
 
-    static_job_, non_scf_job_, dos_job_ = customize_funcs(
+    static_job_, non_scf_job_, dos_job_ = customize_funcs(  # type: ignore[misc] # FIX ME
         ["static_job", "non_scf_job", "dos_job"],
         [static_job, non_scf_job, dos_job],
-        param_defaults=default_job_params,
+        param_defaults=default_job_params,  # type: ignore[arg-type] # FIX ME
         param_swaps=job_params,
         decorators=job_decorators,
     )
@@ -221,7 +221,7 @@ def dos_flow(
 @flow
 def projwfc_flow(
     atoms: Atoms,
-    job_decorators: dict[str, Callable | None] | None = None,
+    job_decorators: dict[str, Callable | None] | None = None,  # type: ignore[type-arg] # FIX ME
     job_params: dict[str, Any] | None = None,
 ) -> EspressoProjwfcSchema:
     """
@@ -275,10 +275,10 @@ def projwfc_flow(
             },
         ),
     }
-    static_job_, non_scf_job_, projwfc_job_ = customize_funcs(
+    static_job_, non_scf_job_, projwfc_job_ = customize_funcs(  # type: ignore[misc] # FIX ME
         ["static_job", "non_scf_job", "projwfc_job"],
         [static_job, non_scf_job, projwfc_job],
-        param_defaults=default_job_params,
+        param_defaults=default_job_params,  # type: ignore[arg-type] # FIX ME
         param_swaps=job_params,
         decorators=job_decorators,
     )
@@ -288,7 +288,7 @@ def projwfc_flow(
     non_scf_results = non_scf_job_(atoms, prev_outdir=static_results_dir)
     projwfc_results = projwfc_job_(prev_outdir=static_results_dir)
 
-    return {
+    return {  # type: ignore[typeddict-unknown-key] # FIX ME
         "static_job": static_results,
         "non_scf_job": non_scf_results,
         "projwfc_job": projwfc_results,

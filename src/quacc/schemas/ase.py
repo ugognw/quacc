@@ -100,7 +100,7 @@ class Summarize:
         directory = self.directory or final_atoms.calc.directory
 
         # Generate input atoms metadata
-        input_atoms_metadata = atoms_to_metadata(input_atoms) if input_atoms else {}
+        input_atoms_metadata = atoms_to_metadata(input_atoms) if input_atoms else {}  # type: ignore[typeddict-item] # FIX ME
 
         # Generate the base of the task document
         inputs = {
@@ -116,14 +116,14 @@ class Summarize:
         atoms_to_store = prep_next_run(final_atoms, move_magmoms=self.move_magmoms)
 
         # Generate final atoms metadata
-        final_atoms_metadata = atoms_to_metadata(atoms_to_store) if final_atoms else {}
+        final_atoms_metadata = atoms_to_metadata(atoms_to_store) if final_atoms else {}  # type: ignore[typeddict-item] # FIX ME
 
         # Create a dictionary of the inputs/outputs
         unsorted_task_doc = (
             final_atoms_metadata | inputs | results | self.additional_fields
         )
 
-        return clean_dict(unsorted_task_doc)
+        return clean_dict(unsorted_task_doc)  # type: ignore[return-value] # FIX ME
 
     def opt(
         self,
@@ -159,7 +159,7 @@ class Summarize:
         )
 
         # Get trajectory
-        atoms_trajectory = trajectory or read(dyn.trajectory.filename, index=":")
+        atoms_trajectory = trajectory or read(dyn.trajectory.filename, index=":")  # type: ignore[union-attr] # FIX ME
         trajectory_results = [atoms.calc.results for atoms in atoms_trajectory]
 
         initial_atoms = atoms_trajectory[0]
@@ -167,16 +167,16 @@ class Summarize:
         directory = self.directory or final_atoms.calc.directory
 
         # Check convergence
-        is_converged = dyn.converged(dyn.optimizable.get_gradient())
+        is_converged = dyn.converged(dyn.optimizable.get_gradient())  # type: ignore[no-untyped-call] # FIX ME
         if check_convergence and not is_converged:
             msg = f"Optimization did not converge. Refer to {directory}"
             raise RuntimeError(msg)
 
         # Base task doc
-        base_task_doc = self.run(final_atoms, initial_atoms)
+        base_task_doc = self.run(final_atoms, initial_atoms)  # type: ignore[arg-type] # FIX ME
 
         # Clean up the opt parameters
-        parameters_opt = dyn.todict()
+        parameters_opt = dyn.todict()  # type: ignore[no-untyped-call] # FIX ME
         parameters_opt.pop("logfile", None)
         parameters_opt.pop("restart", None)
 
@@ -190,7 +190,7 @@ class Summarize:
         # Create a dictionary of the inputs/outputs
         unsorted_task_doc = base_task_doc | opt_fields | self.additional_fields
 
-        return clean_dict(unsorted_task_doc)
+        return clean_dict(unsorted_task_doc)  # type: ignore[return-value] # FIX ME
 
     def md(
         self, dyn: MolecularDynamics, trajectory: list[Atoms] | None = None
@@ -212,20 +212,20 @@ class Summarize:
             Dictionary representation of the task document
         """
         # Check and set up variables
-        base_task_doc = self.opt(dyn, trajectory=trajectory, check_convergence=False)
-        del base_task_doc["converged"]
+        base_task_doc = self.opt(dyn, trajectory=trajectory, check_convergence=False)  # type: ignore[arg-type] # FIX ME
+        del base_task_doc["converged"]  # type: ignore[misc] # FIX ME
 
         # Clean up the opt parameters
-        parameters_md = base_task_doc.pop("parameters_opt")
-        parameters_md.pop("logfile", None)
+        parameters_md = base_task_doc.pop("parameters_opt")  # type: ignore[misc] # FIX ME
+        parameters_md.pop("logfile", None)  # type: ignore[typeddict-item] # FIX ME
 
         trajectory_log = []
         for t, atoms in enumerate(base_task_doc["trajectory"]):
             trajectory_log.append(
                 {
-                    "kinetic_energy": atoms.get_kinetic_energy(),
-                    "temperature": atoms.get_temperature(),
-                    "time": t * parameters_md["timestep"],
+                    "kinetic_energy": atoms.get_kinetic_energy(),  # type: ignore[no-untyped-call] # FIX ME
+                    "temperature": atoms.get_temperature(),  # type: ignore[no-untyped-call] # FIX ME
+                    "time": t * parameters_md["timestep"],  # type: ignore[typeddict-item] # FIX ME
                 }
             )
 
@@ -234,7 +234,7 @@ class Summarize:
         # Create a dictionary of the inputs/outputs
         unsorted_task_doc = base_task_doc | md_fields | self.additional_fields
 
-        return clean_dict(unsorted_task_doc)
+        return clean_dict(unsorted_task_doc)  # type: ignore[return-value] # FIX ME
 
     def neb(
         self,
@@ -264,13 +264,13 @@ class Summarize:
         """
 
         # Get trajectory
-        atoms_trajectory = trajectory or read(dyn.trajectory.filename, index=":")
+        atoms_trajectory = trajectory or read(dyn.trajectory.filename, index=":")  # type: ignore[union-attr] # FIX ME
 
         if n_iter_return == -1:
-            atoms_trajectory = atoms_trajectory[-(n_images):]
+            atoms_trajectory = atoms_trajectory[-(n_images):]  # type: ignore[index] # FIX ME
         else:
             atoms_trajectory = _get_nth_iteration(
-                atoms_trajectory,
+                atoms_trajectory,  # type: ignore[arg-type] # FIX ME
                 int(len(atoms_trajectory) / n_images),
                 n_images,
                 n_iter_return,
@@ -286,10 +286,10 @@ class Summarize:
             + 1
         )
         ts_atoms = atoms_trajectory[ts_index]
-        base_task_doc = atoms_to_metadata(atoms_trajectory[0])
+        base_task_doc = atoms_to_metadata(atoms_trajectory[0])  # type: ignore[arg-type] # FIX ME
 
         # Clean up the opt parameters
-        parameters_opt = dyn.todict()
+        parameters_opt = dyn.todict()  # type: ignore[no-untyped-call] # FIX ME
         parameters_opt.pop("logfile", None)
         parameters_opt.pop("restart", None)
 
@@ -303,7 +303,7 @@ class Summarize:
         # Create a dictionary of the inputs/outputs
         unsorted_task_doc = base_task_doc | opt_fields | self.additional_fields
 
-        return clean_dict(unsorted_task_doc)
+        return clean_dict(unsorted_task_doc)  # type: ignore[return-value] # FIX ME
 
 
 class VibSummarize:
@@ -367,7 +367,7 @@ class VibSummarize:
             directory = self.directory or atoms.calc.directory
             inputs = {
                 "parameters": atoms.calc.parameters,
-                "parameters_vib": {
+                "parameters_vib": {  # type: ignore[dict-item] # FIX ME
                     "delta": self.vib_object.delta,
                     "direction": self.vib_object.direction,
                     "method": self.vib_object.method,
@@ -434,7 +434,7 @@ class VibSummarize:
             atoms_metadata | inputs | vib_results | self.additional_fields
         )
 
-        return clean_dict(unsorted_task_doc)
+        return clean_dict(unsorted_task_doc)  # type: ignore[return-value] # FIX ME
 
     def vib_and_thermo(
         self,
@@ -476,7 +476,7 @@ class VibSummarize:
         # Generate thermo data
         thermo_summary = ThermoSummarize(
             atoms,
-            vib_schema["results"]["vib_freqs_raw"],
+            vib_schema["results"]["vib_freqs_raw"],  # type: ignore[arg-type] # FIX ME
             energy=energy,
             additional_fields=self.additional_fields,
         )
@@ -492,9 +492,9 @@ class VibSummarize:
             raise ValueError(f"Unsupported thermo_method: {thermo_method}.")
 
         # Merge the vib and thermo data
-        unsorted_task_doc = recursive_dict_merge(vib_schema, thermo_schema)
+        unsorted_task_doc = recursive_dict_merge(vib_schema, thermo_schema)  # type: ignore[arg-type] # FIX ME
 
-        return clean_dict(unsorted_task_doc)
+        return clean_dict(unsorted_task_doc)  # type: ignore[return-value] # FIX ME
 
 
 def _get_nth_iteration(

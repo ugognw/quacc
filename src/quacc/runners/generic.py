@@ -54,7 +54,7 @@ class GenericRunner(BaseRunner):
 
         self.setup()
 
-    def run_cmd(self) -> CompletedProcess:
+    def run_cmd(self) -> CompletedProcess:  # type: ignore[type-arg] # FIX ME
         """
         Run a command in a subprocess.
 

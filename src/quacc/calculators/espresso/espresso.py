@@ -14,7 +14,7 @@ from ase.calculators.espresso import EspressoProfile
 from ase.calculators.espresso import EspressoTemplate as EspressoTemplate_
 from ase.calculators.genericfileio import GenericFileIOCalculator
 from ase.io import read, write
-from ase.io.espresso import (
+from ase.io.espresso import (  # type: ignore[attr-defined] # FIX ME
     Namelist,
     read_espresso_ph,
     write_espresso_ph,
@@ -72,7 +72,7 @@ class EspressoTemplate(EspressoTemplate_):
         -------
         None
         """
-        super().__init__()
+        super().__init__()  # type: ignore[no-untyped-call] # FIX ME
 
         self.inputname = f"{binary}.in"
         self.outputname = f"{binary}.out"
@@ -148,7 +148,7 @@ class EspressoTemplate(EspressoTemplate_):
                 )
 
     def execute(self, *args: Any, **kwargs: Any) -> None:
-        super().execute(*args, **kwargs)
+        super().execute(*args, **kwargs)  # type: ignore[no-untyped-call] # FIX ME
         self.nruns += 1
 
     @staticmethod
@@ -171,7 +171,7 @@ class EspressoTemplate(EspressoTemplate_):
         for section in input_data:
             for key in input_data[section]:
                 if key == key_to_search:
-                    return input_data[section][key]
+                    return input_data[section][key]  # type: ignore[no-any-return] # FIX ME
         return None
 
     @staticmethod
@@ -195,7 +195,7 @@ class EspressoTemplate(EspressoTemplate_):
 
         Path(directory, f"{prefix}.EXIT").touch()
 
-    def read_results(self, directory: os.PathLike) -> dict[str, Any]:
+    def read_results(self, directory: os.PathLike) -> dict[str, Any]:  # type: ignore[type-arg] # FIX ME
         """
         The function that should be used instead of the one in ASE EspressoTemplate to
         read the output file. It calls a customly defined read function. It also adds
@@ -215,10 +215,10 @@ class EspressoTemplate(EspressoTemplate_):
         results = {}
         if self.binary == "pw":
             atoms = read(Path(directory) / self.outputname, format="espresso-out")
-            results = dict(atoms.calc.properties())
+            results = dict(atoms.calc.properties())  # type: ignore[union-attr] # FIX ME
         elif self.binary in ["ph", "phcg"]:
             with Path(directory, self.outputname).open() as fd:
-                results = read_espresso_ph(fd)
+                results = read_espresso_ph(fd)  # type: ignore[no-untyped-call] # FIX ME
         elif self.binary == "dos":
             with Path(directory, "pwscf.dos").open() as fd:
                 lines = fd.readlines()
@@ -228,10 +228,10 @@ class EspressoTemplate(EspressoTemplate_):
             results = {"dos_results": {"dos": dos, "fermi": fermi}}
         elif self.binary == "projwfc":
             with Path(directory, "pwscf.pdos_tot").open() as fd:
-                lines = np.loadtxt(fd.readlines())
-                energy = lines[1:, 0]
-                dos = lines[1:, 1]
-                pdos = lines[1:, 2]
+                lines = np.loadtxt(fd.readlines())  # type: ignore[assignment] # FIX ME
+                energy = lines[1:, 0]  # type: ignore[call-overload] # FIX ME
+                dos = lines[1:, 1]  # type: ignore[call-overload] # FIX ME
+                pdos = lines[1:, 2]  # type: ignore[call-overload] # FIX ME
             results = {"projwfc_results": {"energy": energy, "dos": dos, "pdos": pdos}}
         elif self.binary == "matdyn":
             fldos = Path(directory, "matdyn.dos")
@@ -345,7 +345,7 @@ class EspressoTemplate(EspressoTemplate_):
             parameters["input_data"]["inputph"] = input_ph
             parameters["qpts"] = qpts
 
-        return remove_dict_entries(parameters, remove_trigger=Remove)
+        return remove_dict_entries(parameters, remove_trigger=Remove)  # type: ignore[return-value] # FIX ME
 
 
 class Espresso(GenericFileIOCalculator):
@@ -355,7 +355,7 @@ class Espresso(GenericFileIOCalculator):
     Templates are used to set the binary and input/output file names.
     """
 
-    def __init__(
+    def __init__(  # type: ignore[no-untyped-def] # FIX ME
         self,
         input_atoms: Atoms | None = None,
         preset: str | Path | None = None,
@@ -391,7 +391,7 @@ class Espresso(GenericFileIOCalculator):
         -------
         None
         """
-        self.input_atoms = input_atoms or Atoms()
+        self.input_atoms = input_atoms or Atoms()  # type: ignore[no-untyped-call] # FIX ME
         self.preset = preset
         self.kwargs = kwargs
         self.user_calc_params = {}
@@ -425,11 +425,11 @@ class Espresso(GenericFileIOCalculator):
         )
         cmd_suffix = self._settings.ESPRESSO_PARALLEL_CMD[1]
 
-        profile = EspressoProfile(
+        profile = EspressoProfile(  # type: ignore[no-untyped-call] # FIX ME
             f"{cmd_prefix} {self._bin_path} {cmd_suffix}", self._pseudo_path
         )
 
-        super().__init__(
+        super().__init__(  # type: ignore[no-untyped-call] # FIX ME
             template=template,
             profile=profile,
             directory=".",
@@ -466,7 +466,7 @@ class Espresso(GenericFileIOCalculator):
                 )
                 calc_preset.pop("pseudopotentials", None)
                 calc_preset = remove_conflicting_kpts_kspacing(calc_preset, self.kwargs)
-                self.user_calc_params = recursive_dict_merge(
+                self.user_calc_params = recursive_dict_merge(  # type: ignore[assignment] # FIX ME
                     calc_preset,
                     {
                         "input_data": {
@@ -477,7 +477,7 @@ class Espresso(GenericFileIOCalculator):
                     self.kwargs,
                 )
             else:
-                self.user_calc_params = recursive_dict_merge(calc_preset, self.kwargs)
+                self.user_calc_params = recursive_dict_merge(calc_preset, self.kwargs)  # type: ignore[assignment] # FIX ME
         else:
             self.user_calc_params = self.kwargs
 

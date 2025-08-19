@@ -61,29 +61,29 @@ def convert_pmg_kpts(
     struct = AseAtomsAdaptor.get_structure(input_atoms)
 
     if pmg_kpts.get("line_density"):
-        kpath = HighSymmKpath(
+        kpath = HighSymmKpath(  # type: ignore[no-untyped-call] # FIX ME
             struct,
             path_type="latimer_munro",
-            has_magmoms=np.any(struct.site_properties.get("magmom", None)),
+            has_magmoms=np.any(struct.site_properties.get("magmom", None)),  # type: ignore[arg-type] # FIX ME
         )
-        kpts, _ = kpath.get_kpoints(
+        kpts, _ = kpath.get_kpoints(  # type: ignore[no-untyped-call] # FIX ME
             line_density=pmg_kpts["line_density"], coords_are_cartesian=False
         )
         kpts = np.stack(kpts)
         gamma = False
 
     else:
-        max_pmg_kpts: PmgKpts = None
+        max_pmg_kpts: PmgKpts = None  # type: ignore[assignment] # FIX ME
         for k, v in pmg_kpts.items():
             if k == "kppvol":
-                pmg_kpts = Kpoints.automatic_density_by_vol(
-                    struct, v, force_gamma=force_gamma
+                pmg_kpts = Kpoints.automatic_density_by_vol(  # type: ignore[assignment] # FIX ME
+                    struct, v, force_gamma=force_gamma  # type: ignore[arg-type] # FIX ME
                 )
             elif k == "kppa":
-                pmg_kpts = Kpoints.automatic_density(struct, v, force_gamma=force_gamma)
+                pmg_kpts = Kpoints.automatic_density(struct, v, force_gamma=force_gamma)  # type: ignore[arg-type, assignment] # FIX ME
             elif k == "length_densities":
-                pmg_kpts = Kpoints.automatic_density_by_lengths(
-                    struct, v, force_gamma=force_gamma
+                pmg_kpts = Kpoints.automatic_density_by_lengths(  # type: ignore[assignment] # FIX ME
+                    struct, v, force_gamma=force_gamma  # type: ignore[arg-type] # FIX ME
                 )
             else:
                 msg = f"Unsupported k-point generation scheme: {pmg_kpts}."
@@ -93,13 +93,13 @@ def convert_pmg_kpts(
                 pmg_kpts
                 if (
                     not max_pmg_kpts
-                    or np.prod(pmg_kpts.kpts[0]) >= np.prod(max_pmg_kpts.kpts[0])
+                    or np.prod(pmg_kpts.kpts[0]) >= np.prod(max_pmg_kpts.kpts[0])  # type: ignore[attr-defined] # FIX ME
                 )
                 else max_pmg_kpts
             )
 
-        kpts = [int(k) for k in max_pmg_kpts.kpts[0]]
-        gamma = max_pmg_kpts.style.name.lower() == "gamma"
+        kpts = [int(k) for k in max_pmg_kpts.kpts[0]]  # type: ignore[attr-defined] # FIX ME
+        gamma = max_pmg_kpts.style.name.lower() == "gamma"  # type: ignore[attr-defined] # FIX ME
 
     return kpts, gamma
 
@@ -127,7 +127,7 @@ def bandgap_to_kspacing(bandgap: float) -> float:
     c = 8.0
 
     delta = a * (bandgap - b)
-    return 0.5 * (
+    return 0.5 * (  # type: ignore[no-any-return] # FIX ME
         deltak_min
         + deltak_max
         + (deltak_max - deltak_min) * delta / ((1 + delta**c) ** (1 / c))

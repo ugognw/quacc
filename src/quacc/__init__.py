@@ -69,7 +69,7 @@ def _internally_set_settings(
     """
     changes = changes or {}
     if not hasattr(_thread_local, "settings") or reset:
-        _thread_local.settings = QuaccSettings()
+        _thread_local.settings = QuaccSettings()  # type: ignore[call-arg] # FIX ME
     for key, value in changes.items():
         setattr(_thread_local.settings, key, value)
 
@@ -85,7 +85,7 @@ def get_settings() -> QuaccSettings:
     """
     if not hasattr(_thread_local, "settings"):
         _internally_set_settings(reset=True)
-    return _thread_local.settings
+    return _thread_local.settings  # type: ignore[no-any-return] # FIX ME
 
 
 _settings = get_settings()
@@ -94,7 +94,7 @@ _settings = get_settings()
 QuaccDefault = DefaultSetting()
 
 # Set logging info
-basicConfig(filename=_settings.LOG_FILENAME, level=getLevelName(_settings.LOG_LEVEL))
+basicConfig(filename=_settings.LOG_FILENAME, level=getLevelName(_settings.LOG_LEVEL))  # type: ignore[arg-type] # FIX ME
 
 
 # Custom exceptions
@@ -142,9 +142,9 @@ if _settings.WORKFLOW_ENGINE == "prefect":
     from prefect.client.schemas import State
     from prefect.futures import PrefectFuture
 
-    def _patched_getitem(self, index: Any) -> Any:
+    def _patched_getitem(self, index: Any) -> Any:  # type: ignore[no-untyped-def] # FIX ME
         @job
-        def _getitem(future, index_):
+        def _getitem(future, index_):  # type: ignore[no-untyped-def] # FIX ME
             return future[index_]
 
         return _getitem(self, index)

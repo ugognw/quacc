@@ -63,7 +63,7 @@ def elastic_tensor_flow(
     else:
         undeformed_result = static_job(atoms)
 
-    return _elastic_tensor_subflow(
+    return _elastic_tensor_subflow(  # type: ignore[no-any-return] # FIX ME
         undeformed_result=undeformed_result,
         relax_job=relax_job,
         static_job=static_job if run_static else None,
@@ -162,18 +162,18 @@ def _deformations_to_elastic_tensor(
     structure = AseAtomsAdaptor.get_structure(undeformed_result["atoms"])
     equilibrium_stress = Stress(
         (
-            voigt_6_to_full_3x3_stress(undeformed_result["results"]["stress"])
-            if len(undeformed_result["results"]["stress"]) == 6
-            else undeformed_result["results"]["stress"]
+            voigt_6_to_full_3x3_stress(undeformed_result["results"]["stress"])  # type: ignore[no-untyped-call, typeddict-item] # FIX ME
+            if len(undeformed_result["results"]["stress"]) == 6  # type: ignore[typeddict-item] # FIX ME
+            else undeformed_result["results"]["stress"]  # type: ignore[typeddict-item] # FIX ME
         )
         / units.GPa
     )
     stresses = [
         Stress(
             (
-                voigt_6_to_full_3x3_stress(relax_result["results"]["stress"])
-                if len(relax_result["results"]["stress"]) == 6
-                else relax_result["results"]["stress"]
+                voigt_6_to_full_3x3_stress(relax_result["results"]["stress"])  # type: ignore[no-untyped-call, typeddict-item] # FIX ME
+                if len(relax_result["results"]["stress"]) == 6  # type: ignore[typeddict-item] # FIX ME
+                else relax_result["results"]["stress"]  # type: ignore[typeddict-item] # FIX ME
             )
             / units.GPa
         )

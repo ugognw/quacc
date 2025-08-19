@@ -18,7 +18,7 @@ if TYPE_CHECKING:
 
 
 @job
-def static_job(
+def static_job(  # type: ignore[no-untyped-def] # FIX ME
     atoms: Atoms,
     charge: int = 0,
     spin_multiplicity: int = 1,
@@ -84,7 +84,7 @@ def static_job(
 
 
 @job
-def relax_job(
+def relax_job(  # type: ignore[no-untyped-def] # FIX ME
     atoms: Atoms,
     charge: int,
     spin_multiplicity: int,

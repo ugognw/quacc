@@ -19,7 +19,7 @@ if TYPE_CHECKING:
 
 
 @job
-def static_job(
+def static_job(  # type: ignore[no-untyped-def] # FIX ME
     atoms: Atoms,
     method: Literal["mace-mp-0", "m3gnet", "chgnet", "sevennet", "orb", "fairchem"],
     additional_fields: dict[str, Any] | None = None,
@@ -58,7 +58,7 @@ def static_job(
 
 
 @job
-def relax_job(
+def relax_job(  # type: ignore[no-untyped-def] # FIX ME
     atoms: Atoms,
     method: Literal["mace-mp-0", "m3gnet", "chgnet", "sevennet", "orb", "fairchem"],
     relax_cell: bool = False,
@@ -97,7 +97,7 @@ def relax_job(
         See the type-hint for the data structure.
     """
     opt_defaults = {"fmax": 0.05}
-    opt_flags = recursive_dict_merge(opt_defaults, opt_params)
+    opt_flags = recursive_dict_merge(opt_defaults, opt_params)  # type: ignore[arg-type] # FIX ME
 
     calc = pick_calculator(method, **calc_kwargs)
 

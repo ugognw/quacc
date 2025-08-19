@@ -40,7 +40,7 @@ if TYPE_CHECKING:
 @requires(
     has_newtonnet, "NewtonNet must be installed. Refer to the quacc documentation."
 )
-def static_job(
+def static_job(  # type: ignore[no-untyped-def] # FIX ME
     atoms: Atoms,
     copy_files: SourceDirectory | dict[SourceDirectory, Filenames] | None = None,
     additional_fields: dict[str, Any] | None = None,
@@ -87,7 +87,7 @@ def static_job(
 @requires(
     has_newtonnet, "NewtonNet must be installed. Refer to the quacc documentation."
 )
-def relax_job(
+def relax_job(  # type: ignore[no-untyped-def] # FIX ME
     atoms: Atoms,
     opt_params: OptParams | None = None,
     copy_files: SourceDirectory | dict[SourceDirectory, Filenames] | None = None,
@@ -127,13 +127,13 @@ def relax_job(
     opt_defaults = {"optimizer": Sella} if has_sella else {}
 
     calc_flags = recursive_dict_merge(calc_defaults, calc_kwargs)
-    opt_flags = recursive_dict_merge(opt_defaults, opt_params)
+    opt_flags = recursive_dict_merge(opt_defaults, opt_params)  # type: ignore[arg-type] # FIX ME
 
     calc = NewtonNet(**calc_flags)
     dyn = Runner(atoms, calc, copy_files=copy_files).run_opt(**opt_flags)
 
-    return _add_stdev_and_hess(
-        Summarize(
+    return _add_stdev_and_hess(  # type: ignore[return-value] # FIX ME
+        Summarize(  # type: ignore[arg-type] # FIX ME
             additional_fields={"name": "NewtonNet Relax"} | (additional_fields or {})
         ).opt(dyn)
     )
@@ -143,7 +143,7 @@ def relax_job(
 @requires(
     has_newtonnet, "NewtonNet must be installed. Refer to the quacc documentation."
 )
-def freq_job(
+def freq_job(  # type: ignore[no-untyped-def] # FIX ME
     atoms: Atoms,
     temperature: float = 298.15,
     pressure: float = 1.0,
@@ -191,20 +191,20 @@ def freq_job(
         additional_fields={"name": "NewtonNet Frequency"} | (additional_fields or {})
     ).run(final_atoms, atoms)
 
-    vib = VibrationsData(final_atoms, summary["results"]["hessian"])
+    vib = VibrationsData(final_atoms, summary["results"]["hessian"])  # type: ignore[typeddict-item] # FIX ME
     return VibSummarize(
         vib,
         directory=summary["dir_name"],
         additional_fields={"name": "ASE Vibrations and Thermo Analysis"},
     ).vib_and_thermo(
         "ideal_gas",
-        energy=summary["results"]["energy"],
+        energy=summary["results"]["energy"],  # type: ignore[typeddict-item] # FIX ME
         temperature=temperature,
         pressure=pressure,
     )
 
 
-def _add_stdev_and_hess(summary: dict[str, Any], **calc_kwargs) -> dict[str, Any]:
+def _add_stdev_and_hess(summary: dict[str, Any], **calc_kwargs) -> dict[str, Any]:  # type: ignore[no-untyped-def] # FIX ME
     """
     Calculate and add standard deviation values and Hessians to the summary.
 

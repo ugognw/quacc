@@ -54,7 +54,7 @@ def write_qchem(
     qc_input.write_file(directory / "mol.qin")
 
 
-def read_qchem(directory: Path | str) -> tuple[QchemResults, NDArray | None]:
+def read_qchem(directory: Path | str) -> tuple[QchemResults, NDArray | None]:  # type: ignore[type-arg] # FIX ME
     """
     Read Q-Chem log files.
 

@@ -27,7 +27,7 @@ if TYPE_CHECKING:
 
 
 @job
-def bands_pw_job(
+def bands_pw_job(  # type: ignore[no-untyped-def] # FIX ME
     atoms: Atoms,
     copy_files: (
         SourceDirectory
@@ -98,13 +98,13 @@ def bands_pw_job(
     }
     if make_bandpath:
         structure = AseAtomsAdaptor.get_structure(atoms)
-        primitive = SpacegroupAnalyzer(structure).get_primitive_standard_structure()
+        primitive = SpacegroupAnalyzer(structure).get_primitive_standard_structure()  # type: ignore[arg-type] # FIX ME
         atoms = primitive.to_ase_atoms()
-        calc_defaults["kpts"] = bandpath(
+        calc_defaults["kpts"] = bandpath(  # type: ignore[no-untyped-call] # FIX ME
             convert_pmg_kpts(
                 {"line_density": line_density}, atoms, force_gamma=force_gamma
             )[0],
-            cell=atoms.get_cell(),
+            cell=atoms.get_cell(),  # type: ignore[no-untyped-call] # FIX ME
         )
 
     return run_and_summarize(
@@ -118,7 +118,7 @@ def bands_pw_job(
 
 
 @job
-def bands_pp_job(
+def bands_pp_job(  # type: ignore[no-untyped-def] # FIX ME
     copy_files: (
         SourceDirectory
         | list[SourceDirectory]
@@ -177,7 +177,7 @@ def bands_pp_job(
 
 
 @job
-def fermi_surface_job(
+def fermi_surface_job(  # type: ignore[no-untyped-def] # FIX ME
     copy_files: (
         SourceDirectory
         | list[SourceDirectory]
@@ -245,7 +245,7 @@ def bands_flow(
     line_density: float = 20,
     force_gamma: bool = True,
     job_params: dict[str, Any] | None = None,
-    job_decorators: dict[str, Callable | None] | None = None,
+    job_decorators: dict[str, Callable | None] | None = None,  # type: ignore[type-arg] # FIX ME
 ) -> EspressoBandsSchema:
     """
     Function to compute bands structure and fermi surface using pw.x, bands.x and fs.x.
@@ -301,7 +301,7 @@ def bands_flow(
         Dictionary of results from [quacc.schemas.ase.Summarize.run][].
         See the type-hint for the data structure.
     """
-    (bands_pw_job_, bands_pp_job_, fermi_surface_job_) = customize_funcs(
+    (bands_pw_job_, bands_pp_job_, fermi_surface_job_) = customize_funcs(  # type: ignore[misc] # FIX ME
         ["bands_pw_job", "bands_pp_job", "fermi_surface_job"],
         [bands_pw_job, bands_pp_job, fermi_surface_job],
         param_swaps=job_params,
@@ -326,4 +326,4 @@ def bands_flow(
         fermi_results = fermi_surface_job_(prev_outdir=bands_results_dir)
         results["fermi_surface"] = fermi_results
 
-    return results
+    return results  # type: ignore[return-value] # FIX ME

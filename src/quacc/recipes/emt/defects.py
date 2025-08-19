@@ -58,7 +58,7 @@ def bulk_to_defects_flow(
     run_static: bool = True,
     make_defects_kwargs: dict[str, Any] | None = None,
     job_params: dict[str, dict[str, Any]] | None = None,
-    job_decorators: dict[str, Callable | None] | None = None,
+    job_decorators: dict[str, Callable | None] | None = None,  # type: ignore[type-arg] # FIX ME
 ) -> list[RunSchema | OptSchema]:
     """
     Workflow consisting of:
@@ -100,17 +100,17 @@ def bulk_to_defects_flow(
         or [quacc.schemas.ase.Summarize.opt][].
         See the return type-hint for the data structure.
     """
-    relax_job_, static_job_ = customize_funcs(
+    relax_job_, static_job_ = customize_funcs(  # type: ignore[misc] # FIX ME
         ["relax_job", "static_job"],
         [relax_job, static_job],
         param_swaps=job_params,
         decorators=job_decorators,
     )
-    make_defects_kwargs = recursive_dict_merge(
+    make_defects_kwargs = recursive_dict_merge(  # type: ignore[assignment] # FIX ME
         make_defects_kwargs, {"defect_gen": defect_gen, "defect_charge": defect_charge}
     )
 
-    return bulk_to_defects_subflow(
+    return bulk_to_defects_subflow(  # type: ignore[no-any-return] # FIX ME
         atoms,
         relax_job_,
         static_job=static_job_ if run_static else None,

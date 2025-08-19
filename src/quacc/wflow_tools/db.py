@@ -13,7 +13,7 @@ if TYPE_CHECKING:
     from maggma.core import Store
 
 
-def results_to_db(store: Store, results: dict[str, Any] | list[dict]) -> None:
+def results_to_db(store: Store, results: dict[str, Any] | list[dict]) -> None:  # type: ignore[type-arg] # FIX ME
     """
     Store the results of a quacc recipe in a user-specified Maggma Store. A UUID will be
     generated for each entry.
@@ -34,7 +34,7 @@ def results_to_db(store: Store, results: dict[str, Any] | list[dict]) -> None:
         results = [results]
 
     sanitized_results = [
-        jsanitize(result, enum_values=True, recursive_msonable=True)
+        jsanitize(result, enum_values=True, recursive_msonable=True)  # type: ignore[no-untyped-call] # FIX ME
         for result in results
     ]
 

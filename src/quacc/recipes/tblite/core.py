@@ -26,7 +26,7 @@ if TYPE_CHECKING:
 
 @job
 @requires(has_tblite, "tblite must be installed. Refer to the quacc documentation.")
-def static_job(
+def static_job(  # type: ignore[no-untyped-def] # FIX ME
     atoms: Atoms,
     method: Literal["GFN1-xTB", "GFN2-xTB", "IPEA1-xTB"] = "GFN2-xTB",
     additional_fields: dict[str, Any] | None = None,
@@ -66,7 +66,7 @@ def static_job(
 
 @job
 @requires(has_tblite, "tblite must be installed. Refer to the quacc documentation.")
-def relax_job(
+def relax_job(  # type: ignore[no-untyped-def] # FIX ME
     atoms: Atoms,
     method: Literal["GFN1-xTB", "GFN2-xTB", "IPEA1-xTB"] = "GFN2-xTB",
     relax_cell: bool = False,
@@ -105,7 +105,7 @@ def relax_job(
     calc_defaults = {"method": method}
     calc_flags = recursive_dict_merge(calc_defaults, calc_kwargs)
     calc = TBLite(**calc_flags)
-    dyn = Runner(atoms, calc).run_opt(relax_cell=relax_cell, **opt_params)
+    dyn = Runner(atoms, calc).run_opt(relax_cell=relax_cell, **opt_params)  # type: ignore[arg-type, misc] # FIX ME
 
     return Summarize(
         additional_fields={"name": "TBLite Relax"} | (additional_fields or {})
@@ -114,7 +114,7 @@ def relax_job(
 
 @job
 @requires(has_tblite, "tblite must be installed. Refer to the quacc documentation.")
-def freq_job(
+def freq_job(  # type: ignore[no-untyped-def] # FIX ME
     atoms: Atoms,
     method: Literal["GFN1-xTB", "GFN2-xTB", "IPEA1-xTB"] = "GFN2-xTB",
     energy: float = 0.0,

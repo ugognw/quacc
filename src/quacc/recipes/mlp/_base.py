@@ -22,7 +22,7 @@ LOGGER = getLogger(__name__)
 
 
 @requires(has_frozen, "frozendict must be installed. Run pip install frozendict.")
-def freezeargs(func: Callable) -> Callable:
+def freezeargs(func: Callable) -> Callable:  # type: ignore[type-arg] # FIX ME
     """
     Convert a mutable dictionary into immutable.
     Useful to make sure dictionary args are compatible with cache
@@ -41,8 +41,8 @@ def freezeargs(func: Callable) -> Callable:
     from frozendict import frozendict
 
     @wraps(func)
-    def wrapped(*args, **kwargs):
-        args = (frozendict(arg) if isinstance(arg, dict) else arg for arg in args)
+    def wrapped(*args, **kwargs):  # type: ignore[no-untyped-def] # FIX ME
+        args = (frozendict(arg) if isinstance(arg, dict) else arg for arg in args)  # type: ignore[assignment] # FIX ME
         kwargs = {
             k: frozendict(v) if isinstance(v, dict) else v for k, v in kwargs.items()
         }
@@ -53,7 +53,7 @@ def freezeargs(func: Callable) -> Callable:
 
 @freezeargs
 @lru_cache
-def pick_calculator(
+def pick_calculator(  # type: ignore[no-untyped-def] # FIX ME
     method: Literal[
         "mace-mp", "m3gnet", "chgnet", "tensornet", "sevennet", "orb", "fairchem"
     ],
@@ -143,4 +143,4 @@ def pick_calculator(
 
     calc.parameters["version"] = __version__
 
-    return calc
+    return calc  # type: ignore[no-any-return] # FIX ME

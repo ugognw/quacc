@@ -19,7 +19,7 @@ if TYPE_CHECKING:
 
 
 @job
-def static_job(
+def static_job(  # type: ignore[no-untyped-def] # FIX ME
     atoms: Atoms,
     preset: str | None = "SlabSetPBE",
     copy_files: SourceDirectory | dict[SourceDirectory, Filenames] | None = None,
@@ -72,7 +72,7 @@ def static_job(
 
 
 @job
-def relax_job(
+def relax_job(  # type: ignore[no-untyped-def] # FIX ME
     atoms: Atoms,
     preset: str | None = "SlabSetPBE",
     copy_files: SourceDirectory | dict[SourceDirectory, Filenames] | None = None,
@@ -130,7 +130,7 @@ def bulk_to_slabs_flow(
     make_slabs_kwargs: dict[str, Any] | None = None,
     run_static: bool = True,
     job_params: dict[str, dict[str, Any]] | None = None,
-    job_decorators: dict[str, Callable | None] | None = None,
+    job_decorators: dict[str, Callable | None] | None = None,  # type: ignore[type-arg] # FIX ME
 ) -> list[VaspSchema]:
     """
     Workflow consisting of:
@@ -166,14 +166,14 @@ def bulk_to_slabs_flow(
         List of dictionary results from [quacc.schemas.vasp.VaspSummarize.run][].
         See the type-hint for the data structure.
     """
-    relax_job_, static_job_ = customize_funcs(
+    relax_job_, static_job_ = customize_funcs(  # type: ignore[misc] # FIX ME
         ["relax_job", "static_job"],
         [relax_job, static_job],
         param_swaps=job_params,
         decorators=job_decorators,
     )
 
-    return bulk_to_slabs_subflow(
+    return bulk_to_slabs_subflow(  # type: ignore[no-any-return] # FIX ME
         atoms,
         relax_job_,
         static_job=static_job_ if run_static else None,
@@ -188,7 +188,7 @@ def slab_to_ads_flow(
     run_static: bool = True,
     make_ads_kwargs: dict[str, Any] | None = None,
     job_params: dict[str, dict[str, Any]] | None = None,
-    job_decorators: dict[str, Callable | None] | None = None,
+    job_decorators: dict[str, Callable | None] | None = None,  # type: ignore[type-arg] # FIX ME
 ) -> list[VaspSchema]:
     """
     Workflow consisting of:
@@ -226,14 +226,14 @@ def slab_to_ads_flow(
         List of dictionaries of results from [quacc.schemas.vasp.VaspSummarize.run][].
         See the type-hint for the data structure.
     """
-    relax_job_, static_job_ = customize_funcs(
+    relax_job_, static_job_ = customize_funcs(  # type: ignore[misc] # FIX ME
         ["relax_job", "static_job"],
         [relax_job, static_job],
         param_swaps=job_params,
         decorators=job_decorators,
     )
 
-    return slab_to_ads_subflow(
+    return slab_to_ads_subflow(  # type: ignore[no-any-return] # FIX ME
         slab,
         adsorbate,
         relax_job_,

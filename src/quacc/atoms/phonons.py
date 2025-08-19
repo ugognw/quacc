@@ -7,7 +7,7 @@ from typing import TYPE_CHECKING
 
 import numpy as np
 from monty.dev import requires
-from pymatgen.core import Structure
+from pymatgen.core import Structure  # type: ignore[attr-defined] # FIX ME
 from pymatgen.io.phonopy import get_phonopy_structure, get_pmg_structure
 
 has_phonopy = bool(find_spec("phonopy"))
@@ -28,14 +28,14 @@ if TYPE_CHECKING:
 def get_phonopy(
     atoms: Atoms,
     min_lengths: float | tuple[float, float, float] | None = None,
-    supercell_matrix: (
+    supercell_matrix: (  # type: ignore[type-arg] # FIX ME
         NDArray
         | tuple[tuple[int, int, int], tuple[int, int, int], tuple[int, int, int]]
         | None
     ) = None,
     symprec: float = 1e-5,
     displacement: float = 0.01,
-    phonopy_kwargs: dict | None = None,
+    phonopy_kwargs: dict | None = None,  # type: ignore[type-arg] # FIX ME
 ) -> Phonopy:
     """
     Convert an ASE atoms object to a phonopy object with displacements generated.
@@ -94,7 +94,7 @@ def phonopy_atoms_to_ase_atoms(phonopy_atoms: PhonopyAtoms) -> Atoms:
         ASE atoms object
     """
     pmg_structure = get_pmg_structure(phonopy_atoms)
-    return pmg_structure.to_ase_atoms()
+    return pmg_structure.to_ase_atoms()  # type: ignore[no-any-return] # FIX ME
 
 
 @requires(has_phonopy, "Phonopy not installed.")

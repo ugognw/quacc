@@ -7,7 +7,7 @@ from typing import TYPE_CHECKING, Literal
 
 import numpy as np
 from monty.os.path import zpath
-from pymatgen.io.vasp import Vasprun
+from pymatgen.io.vasp import Vasprun  # type: ignore[attr-defined] # FIX ME
 
 from quacc import flow, job
 from quacc.recipes.vasp._base import (
@@ -34,7 +34,7 @@ if TYPE_CHECKING:
 
 
 @job
-def static_job(
+def static_job(  # type: ignore[no-untyped-def] # FIX ME
     atoms: Atoms,
     preset: str | None = "DefaultSetPBE",
     copy_files: SourceDirectory | dict[SourceDirectory, Filenames] | None = None,
@@ -85,7 +85,7 @@ def static_job(
 
 
 @job
-def relax_job(
+def relax_job(  # type: ignore[no-untyped-def] # FIX ME
     atoms: Atoms,
     preset: str | None = "DefaultSetPBE",
     relax_cell: bool = False,
@@ -197,7 +197,7 @@ def double_relax_flow(
 
 
 @job
-def ase_relax_job(
+def ase_relax_job(  # type: ignore[no-untyped-def] # FIX ME
     atoms: Atoms,
     preset: str | None = "DefaultSetPBE",
     relax_cell: bool = False,
@@ -250,7 +250,7 @@ def ase_relax_job(
 
 
 @job
-def non_scf_job(
+def non_scf_job(  # type: ignore[no-untyped-def] # FIX ME
     atoms: Atoms,
     prev_dir: SourceDirectory,
     preset: str | None = "DefaultSetPBE",
@@ -343,7 +343,7 @@ def non_scf_job(
 
 
 @job
-def freq_job(
+def freq_job(  # type: ignore[no-untyped-def] # FIX ME
     atoms: Atoms,
     preset: str | None = "DefaultSetPBE",
     energy: float = 0.0,
@@ -397,7 +397,7 @@ def freq_job(
         preset=preset,
         calc_defaults=calc_defaults,
         calc_swaps=calc_kwargs,
-        vib_kwargs=vib_kwargs,
+        vib_kwargs=vib_kwargs,  # type: ignore[arg-type] # FIX ME
         copy_files=copy_files,
         additional_fields={"name": "VASP Frequency and Thermo"},
     )

@@ -33,7 +33,7 @@ def bulk_to_defects_subflow(
     relax_job: Job,
     static_job: Job | None = None,
     make_defects_kwargs: dict[str, Any] | None = None,
-) -> list[dict]:
+) -> list[dict]:  # type: ignore[type-arg] # FIX ME
     """
     Workflow consisting of:
 

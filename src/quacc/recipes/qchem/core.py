@@ -36,7 +36,7 @@ _BASE_SET = {
 
 
 @job
-def static_job(
+def static_job(  # type: ignore[no-untyped-def] # FIX ME
     atoms: Atoms,
     charge: int = 0,
     spin_multiplicity: int = 1,
@@ -85,7 +85,7 @@ def static_job(
         atoms,
         charge=charge,
         spin_multiplicity=spin_multiplicity,
-        calc_defaults=calc_defaults,
+        calc_defaults=calc_defaults,  # type: ignore[arg-type] # FIX ME
         calc_swaps=calc_kwargs,
         additional_fields={"name": "Q-Chem Static"} | (additional_fields or {}),
         copy_files=copy_files,
@@ -93,7 +93,7 @@ def static_job(
 
 
 @job
-def relax_job(
+def relax_job(  # type: ignore[no-untyped-def] # FIX ME
     atoms: Atoms,
     charge: int = 0,
     spin_multiplicity: int = 1,
@@ -147,7 +147,7 @@ def relax_job(
         atoms,
         charge=charge,
         spin_multiplicity=spin_multiplicity,
-        calc_defaults=calc_defaults,
+        calc_defaults=calc_defaults,  # type: ignore[arg-type] # FIX ME
         calc_swaps=calc_kwargs,
         opt_defaults=opt_defaults,
         opt_params=opt_params,
@@ -157,7 +157,7 @@ def relax_job(
 
 
 @job
-def freq_job(
+def freq_job(  # type: ignore[no-untyped-def] # FIX ME
     atoms: Atoms,
     charge: int = 0,
     spin_multiplicity: int = 1,
@@ -204,7 +204,7 @@ def freq_job(
         atoms,
         charge=charge,
         spin_multiplicity=spin_multiplicity,
-        calc_defaults=calc_defaults,
+        calc_defaults=calc_defaults,  # type: ignore[arg-type] # FIX ME
         calc_swaps=calc_kwargs,
         copy_files=copy_files,
         additional_fields={"name": "Q-Chem Frequency"} | (additional_fields or {}),

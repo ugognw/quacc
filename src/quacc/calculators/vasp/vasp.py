@@ -40,7 +40,7 @@ class Vasp(Vasp_):
     k-point generation schemes from Pymatgen.
     """
 
-    def __init__(
+    def __init__(  # type: ignore[no-untyped-def] # FIX ME
         self,
         input_atoms: Atoms,
         preset: None | str | Path = None,
@@ -269,7 +269,7 @@ class Vasp(Vasp_):
             and not self.user_calc_params.get("kspacing")
         ):
             self.user_calc_params = set_pmg_kpts(
-                self.user_calc_params, self.pmg_kpts, self.input_atoms
+                self.user_calc_params, self.pmg_kpts, self.input_atoms  # type: ignore[arg-type] # FIX ME
             )
 
         # Add dipole corrections if requested
@@ -282,18 +282,18 @@ class Vasp(Vasp_):
         self.input_atoms = set_magmoms(
             self.input_atoms,
             elemental_mags_dict=self.elemental_magmoms,
-            copy_magmoms=self.copy_magmoms,
-            elemental_mags_default=self.preset_mag_default,
-            mag_cutoff=self.mag_cutoff,
+            copy_magmoms=self.copy_magmoms,  # type: ignore[arg-type] # FIX ME
+            elemental_mags_default=self.preset_mag_default,  # type: ignore[arg-type] # FIX ME
+            mag_cutoff=self.mag_cutoff,  # type: ignore[arg-type] # FIX ME
         )
 
         # Handle INCAR swaps
         self.user_calc_params = get_param_swaps(
-            self.user_calc_params, self.pmg_kpts, self.input_atoms, self.incar_copilot
+            self.user_calc_params, self.pmg_kpts, self.input_atoms, self.incar_copilot  # type: ignore[arg-type] # FIX ME
         )
 
         # Clean up the user calc parameters
-        self.user_calc_params = sort_dict(
+        self.user_calc_params = sort_dict(  # type: ignore[assignment] # FIX ME
             normalize_params(remove_unused_flags(self.user_calc_params))
         )
 
@@ -329,7 +329,7 @@ class Vasp(Vasp_):
 
         if self.use_custodian:
             run_custodian(directory=directory)
-            return 0, None
+            return 0, None  # type: ignore[return-value] # FIX ME
 
         result = subprocess.run(
             command,
@@ -340,5 +340,5 @@ class Vasp(Vasp_):
             check=False,
         )
         if out is not None:
-            out.write(result.stdout)
+            out.write(result.stdout)  # type: ignore[union-attr] # FIX ME
         return result.returncode, result.stderr

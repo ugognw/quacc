@@ -92,7 +92,7 @@ def run_and_summarize_opt(
     RunSchema
         Dictionary of results from [quacc.schemas.ase.Summarize.run][]
     """
-    opt_flags = recursive_dict_merge(opt_defaults, opt_params)
+    opt_flags = recursive_dict_merge(opt_defaults, opt_params)  # type: ignore[arg-type] # FIX ME
     calc = prep_calculator(calc_defaults=calc_defaults, calc_swaps=calc_swaps)
     dyn = Runner(atoms, calc, copy_files=copy_files).run_opt(**opt_flags)
 
@@ -123,7 +123,7 @@ def prep_calculator(
     calc_flags = recursive_dict_merge(calc_defaults, calc_swaps)
     settings = get_settings()
 
-    return Onetep(
-        profile=OnetepProfile(f"{settings.ONETEP_CMD}", str(settings.ONETEP_PP_PATH)),
+    return Onetep(  # type: ignore[no-untyped-call] # FIX ME
+        profile=OnetepProfile(f"{settings.ONETEP_CMD}", str(settings.ONETEP_PP_PATH)),  # type: ignore[no-untyped-call] # FIX ME
         **calc_flags,
     )

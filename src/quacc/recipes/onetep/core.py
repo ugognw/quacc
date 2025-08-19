@@ -28,7 +28,7 @@ BASE_SET = {
 
 
 @job
-def static_job(
+def static_job(  # type: ignore[no-untyped-def] # FIX ME
     atoms: Atoms,
     copy_files: SourceDirectory | dict[SourceDirectory, Filenames] | None = None,
     additional_fields: dict[str, Any] | None = None,
@@ -66,7 +66,7 @@ def static_job(
 
 
 @job
-def ase_relax_job(
+def ase_relax_job(  # type: ignore[no-untyped-def] # FIX ME
     atoms: Atoms,
     relax_cell: bool = False,
     opt_params: OptParams | None = None,
@@ -110,7 +110,7 @@ def ase_relax_job(
 
     return run_and_summarize_opt(
         atoms,
-        calc_defaults=calc_defaults,
+        calc_defaults=calc_defaults,  # type: ignore[arg-type] # FIX ME
         calc_swaps=calc_kwargs,
         opt_defaults=opt_defaults,
         opt_params=opt_params,

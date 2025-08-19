@@ -53,7 +53,7 @@ def run_and_summarize(
     """
     calc_flags = recursive_dict_merge(calc_defaults, calc_swaps)
 
-    calc = Dftb(**calc_flags)
+    calc = Dftb(**calc_flags)  # type: ignore[no-untyped-call] # FIX ME
     final_atoms = Runner(atoms, calc, copy_files=copy_files).run_calc(
         geom_file=_GEOM_FILE
     )

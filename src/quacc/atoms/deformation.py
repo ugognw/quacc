@@ -39,10 +39,10 @@ def make_deformations_from_bulk(
         A pymatgen DeformedStructureSet with information on the deformed
         structures and their strains, useful for fitting later.
     """
-    struct = AseAtomsAdaptor.get_structure(atoms)  # type: ignore
+    struct = AseAtomsAdaptor.get_structure(atoms)
 
     return DeformedStructureSet(
-        struct,
+        struct,  # type: ignore[arg-type] # FIX ME
         norm_strains=norm_strains,
         shear_strains=shear_strains,
         symmetry=symmetry,

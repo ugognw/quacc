@@ -59,7 +59,7 @@ def get_param_swaps(
     """
     is_metal = check_is_metal(input_atoms)
     calc = Vasp_(**user_calc_params)
-    max_Z = input_atoms.get_atomic_numbers().max()
+    max_Z = input_atoms.get_atomic_numbers().max()  # type: ignore[no-untyped-call] # FIX ME
 
     if (
         not calc.int_params["lmaxmix"] or calc.int_params["lmaxmix"] < 6
@@ -176,7 +176,7 @@ def get_param_swaps(
 
     if not calc.int_params["lorbit"] and (
         calc.int_params["ispin"] == 2
-        or np.any(input_atoms.get_initial_magnetic_moments() != 0)
+        or np.any(input_atoms.get_initial_magnetic_moments() != 0)  # type: ignore[no-untyped-call] # FIX ME
     ):
         LOGGER.info(
             "Recommending LORBIT = 11 because you have a spin-polarized calculation."
@@ -238,7 +238,7 @@ def get_param_swaps(
             LOGGER.warning(
                 "Be careful of Pulay stresses. At the end of your run, re-relax your structure with your current ENCUT or set ENCUT=1.3*max(ENMAX)."
             )
-        if "He" in input_atoms.get_chemical_symbols() and (
+        if "He" in input_atoms.get_chemical_symbols() and (  # type: ignore[no-untyped-call] # FIX ME
             calc.encut is None or calc.encut < 478.896 * 1.3
         ):
             LOGGER.warning(
@@ -246,7 +246,7 @@ def get_param_swaps(
             )
 
         if (
-            "Li" in input_atoms.get_chemical_symbols()
+            "Li" in input_atoms.get_chemical_symbols()  # type: ignore[no-untyped-call] # FIX ME
             and calc.parameters.get("setups")
             and isinstance(calc.parameters["setups"], dict)
             and calc.parameters["setups"].get("Li", "") in ("Li_sv", "_sv")
@@ -287,8 +287,8 @@ def get_param_swaps(
         calc.set(vdw_s6=1.0, vdw_s8=2.310, vdw_a1=0.383, vdw_a2=5.685)
 
     if (
-        input_atoms.get_chemical_formula() == "O2"
-        and input_atoms.get_initial_magnetic_moments().sum() == 0
+        input_atoms.get_chemical_formula() == "O2"  # type: ignore[no-untyped-call] # FIX ME
+        and input_atoms.get_initial_magnetic_moments().sum() == 0  # type: ignore[no-untyped-call] # FIX ME
     ):
         LOGGER.warning(
             "You are running O2 without magnetic moments, but its ground state should have 2 unpaired electrons!"
@@ -404,7 +404,7 @@ def set_auto_dipole(
     dict
         The updated user-provided calculator parameters.
     """
-    com = input_atoms.get_center_of_mass(scaled=True)
+    com = input_atoms.get_center_of_mass(scaled=True)  # type: ignore[no-untyped-call] # FIX ME
     if "dipol" not in user_calc_params:
         user_calc_params["dipol"] = com
     if "idipol" not in user_calc_params:
@@ -438,17 +438,17 @@ def set_pmg_kpts(
         The updated user-provided calculator parameters.
     """
     kpts, gamma = convert_pmg_kpts(
-        pmg_kpts, input_atoms, force_gamma=user_calc_params.get("gamma", False)
+        pmg_kpts, input_atoms, force_gamma=user_calc_params.get("gamma", False)  # type: ignore[arg-type] # FIX ME
     )
     reciprocal = bool(pmg_kpts.get("line_density"))
 
-    user_calc_params["kpts"] = kpts
+    user_calc_params["kpts"] = kpts  # type: ignore[typeddict-unknown-key] # FIX ME
     if reciprocal and user_calc_params.get("reciprocal") is None:
-        user_calc_params["reciprocal"] = reciprocal
+        user_calc_params["reciprocal"] = reciprocal  # type: ignore[typeddict-unknown-key] # FIX ME
     if user_calc_params.get("gamma") is None:
-        user_calc_params["gamma"] = gamma
+        user_calc_params["gamma"] = gamma  # type: ignore[typeddict-unknown-key] # FIX ME
 
-    return user_calc_params
+    return user_calc_params  # type: ignore[return-value] # FIX ME
 
 
 class MPtoASEConverter:
@@ -481,7 +481,7 @@ class MPtoASEConverter:
             self.ase_sort, self.ase_resort = Vasp_()._make_sort(self.atoms)
             self.structure = AseAtomsAdaptor.get_structure(self.atoms[self.ase_sort])
 
-    def convert_dict_set(self, dict_set: DictSet) -> dict:
+    def convert_dict_set(self, dict_set: DictSet) -> dict:  # type: ignore[type-arg] # FIX ME
         """
         Convert a Pymatgen DictSet to a dictionary of ASE VASP parameters.
 
@@ -495,7 +495,7 @@ class MPtoASEConverter:
         dict
             The ASE VASP parameters.
         """
-        input_set = dict_set(sort_structure=False)
+        input_set = dict_set(sort_structure=False)  # type: ignore[operator] # FIX ME
         vasp_input = input_set.get_input_set(
             structure=self.structure, potcar_spec=True, prev_dir=self.prev_dir
         )
@@ -507,7 +507,7 @@ class MPtoASEConverter:
         return self._convert()
 
     @requires(has_atomate2, "atomate2 is not installed.")
-    def convert_vasp_maker(self, VaspMaker: BaseVaspMaker) -> dict:
+    def convert_vasp_maker(self, VaspMaker: BaseVaspMaker) -> dict:  # type: ignore[type-arg] # FIX ME
         """
         Convert an atomate2 VaspMaker to a dictionary of ASE VASP parameters.
 
@@ -538,7 +538,7 @@ class MPtoASEConverter:
         self.poscar = input_set.poscar
         return self._convert()
 
-    def _convert(self) -> dict:
+    def _convert(self) -> dict:  # type: ignore[type-arg] # FIX ME
         """
         Convert the MP input to a dictionary of ASE VASP parameters.
 
@@ -563,4 +563,4 @@ class MPtoASEConverter:
                 "gamma": kpts_dict["generation_style"].lower() == "gamma",
             }
 
-        return full_input_params
+        return full_input_params  # type: ignore[no-any-return] # FIX ME

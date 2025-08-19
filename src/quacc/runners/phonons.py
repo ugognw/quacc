@@ -6,7 +6,7 @@ from typing import TYPE_CHECKING
 
 from monty.dev import requires
 
-from quacc.runners.ase import BaseRunner
+from quacc.runners.ase import BaseRunner  # type: ignore[attr-defined] # FIX ME
 
 has_phonopy = bool(find_spec("phonopy"))
 has_seekpath = bool(find_spec("seekpath"))
@@ -35,7 +35,7 @@ class PhonopyRunner(BaseRunner):
     def run_phonopy(
         self,
         phonon: Phonopy,
-        forces: NDArray,
+        forces: NDArray,  # type: ignore[type-arg] # FIX ME
         symmetrize: bool = False,
         t_step: float = 10,
         t_min: float = 0,

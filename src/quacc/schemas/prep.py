@@ -40,7 +40,7 @@ def prep_next_run(atoms: Atoms, move_magmoms: bool = False) -> Atoms:
         and hasattr(atoms, "calc")
         and getattr(atoms.calc, "results", None) is not None
     ):
-        atoms.set_initial_magnetic_moments(
+        atoms.set_initial_magnetic_moments(  # type: ignore[no-untyped-call] # FIX ME
             atoms.calc.results.get("magmoms", [0.0] * len(atoms))
         )
 
@@ -119,7 +119,7 @@ def set_magmoms(
         mags = None
 
     # Check if the user has set any initial magmoms
-    has_initial_mags = atoms.has("initial_magmoms")
+    has_initial_mags = atoms.has("initial_magmoms")  # type: ignore[no-untyped-call] # FIX ME
 
     # If there are no initial magmoms set and this is not a follow-up job, we
     # may need to add some from the preset yaml.
@@ -135,17 +135,17 @@ def set_magmoms(
                         for atom in atoms
                     ]
                 )
-                atoms.set_initial_magnetic_moments(initial_mags)
+                atoms.set_initial_magnetic_moments(initial_mags)  # type: ignore[no-untyped-call] # FIX ME
         else:
             pass
     elif copy_magmoms:
-        atoms.set_initial_magnetic_moments(mags)
+        atoms.set_initial_magnetic_moments(mags)  # type: ignore[no-untyped-call] # FIX ME
 
     # If all the set mags are below mag_cutoff, set them to 0
     if mag_cutoff:
-        has_new_initial_mags = atoms.has("initial_magmoms")
-        new_initial_mags = atoms.get_initial_magnetic_moments()
+        has_new_initial_mags = atoms.has("initial_magmoms")  # type: ignore[no-untyped-call] # FIX ME
+        new_initial_mags = atoms.get_initial_magnetic_moments()  # type: ignore[no-untyped-call] # FIX ME
         if has_new_initial_mags and np.all(np.abs(new_initial_mags) < mag_cutoff):
-            atoms.set_initial_magnetic_moments([0.0] * len(atoms))
+            atoms.set_initial_magnetic_moments([0.0] * len(atoms))  # type: ignore[no-untyped-call] # FIX ME
 
     return atoms

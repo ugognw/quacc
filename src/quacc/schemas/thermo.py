@@ -124,17 +124,17 @@ class ThermoSummarize:
         results = {
             "results": {
                 "energy": igt.potentialenergy,
-                "enthalpy": igt.get_enthalpy(temperature),
-                "entropy": igt.get_entropy(temperature, pressure * 10**5),
-                "gibbs_energy": igt.get_gibbs_energy(temperature, pressure * 10**5),
-                "zpe": igt.get_ZPE_correction(),
+                "enthalpy": igt.get_enthalpy(temperature),  # type: ignore[no-untyped-call] # FIX ME
+                "entropy": igt.get_entropy(temperature, pressure * 10**5),  # type: ignore[no-untyped-call] # FIX ME
+                "gibbs_energy": igt.get_gibbs_energy(temperature, pressure * 10**5),  # type: ignore[no-untyped-call] # FIX ME
+                "zpe": igt.get_ZPE_correction(),  # type: ignore[no-untyped-call] # FIX ME
             }
         }
 
         unsorted_task_doc = (
             atoms_to_metadata(igt.atoms) | inputs | results | self.additional_fields
         )
-        return clean_dict(unsorted_task_doc)
+        return clean_dict(unsorted_task_doc)  # type: ignore[return-value] # FIX ME
 
     def harmonic(
         self, temperature: float = 298.15, pressure: float = 1.0
@@ -174,17 +174,17 @@ class ThermoSummarize:
         results = {
             "results": {
                 "energy": harmonic_thermo.potentialenergy,
-                "helmholtz_energy": harmonic_thermo.get_helmholtz_energy(temperature),
-                "internal_energy": harmonic_thermo.get_internal_energy(temperature),
-                "entropy": harmonic_thermo.get_entropy(temperature),
-                "zpe": harmonic_thermo.get_ZPE_correction(),
+                "helmholtz_energy": harmonic_thermo.get_helmholtz_energy(temperature),  # type: ignore[no-untyped-call] # FIX ME
+                "internal_energy": harmonic_thermo.get_internal_energy(temperature),  # type: ignore[no-untyped-call] # FIX ME
+                "entropy": harmonic_thermo.get_entropy(temperature),  # type: ignore[no-untyped-call] # FIX ME
+                "zpe": harmonic_thermo.get_ZPE_correction(),  # type: ignore[no-untyped-call] # FIX ME
             }
         }
 
         unsorted_task_doc = (
             atoms_to_metadata(self.atoms) | inputs | results | self.additional_fields
         )
-        return clean_dict(unsorted_task_doc)
+        return clean_dict(unsorted_task_doc)  # type: ignore[return-value] # FIX ME
 
     def _make_ideal_gas(self, spin_multiplicity: int | None = None) -> IdealGasThermo:
         """
@@ -217,7 +217,7 @@ class ThermoSummarize:
         else:
             geometry = "nonlinear"
 
-        return IdealGasThermo(
+        return IdealGasThermo(  # type: ignore[no-untyped-call] # FIX ME
             self.vib_energies,
             geometry,
             potentialenergy=self.energy,
@@ -236,7 +236,7 @@ class ThermoSummarize:
         HarmonicThermo
             ASE HarmonicThermo object
         """
-        return HarmonicThermo(
+        return HarmonicThermo(  # type: ignore[no-untyped-call] # FIX ME
             vib_energies=self.vib_energies,
             potentialenergy=self.energy,
             ignore_imag_modes=True,

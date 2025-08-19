@@ -19,11 +19,11 @@ if TYPE_CHECKING:
 
     from quacc.types import Filenames, OptParams, OptSchema, RunSchema, SourceDirectory
 
-_LABEL = OrcaTemplate()._label  # skipcq: PYL-W0212
+_LABEL = OrcaTemplate()._label  # type: ignore[no-untyped-call] # skipcq: PYL-W0212 # FIX ME
 GEOM_FILE = f"{_LABEL}.xyz"
 
 
-def run_and_summarize(
+def run_and_summarize(  # type: ignore[no-untyped-def] # FIX ME
     atoms: Atoms,
     charge: int = 0,
     spin_multiplicity: int = 1,
@@ -85,7 +85,7 @@ def run_and_summarize(
     return Summarize(additional_fields=additional_fields).run(final_atoms, atoms)
 
 
-def run_and_summarize_opt(
+def run_and_summarize_opt(  # type: ignore[no-untyped-def] # FIX ME
     atoms: Atoms,
     charge: int = 0,
     spin_multiplicity: int = 1,
@@ -146,12 +146,12 @@ def run_and_summarize_opt(
         **calc_kwargs,
     )
 
-    opt_flags = recursive_dict_merge(opt_defaults, opt_params)
+    opt_flags = recursive_dict_merge(opt_defaults, opt_params)  # type: ignore[arg-type] # FIX ME
     dyn = Runner(atoms, calc, copy_files=copy_files).run_opt(**opt_flags)
     return Summarize(additional_fields=additional_fields).opt(dyn)
 
 
-def prep_calculator(
+def prep_calculator(  # type: ignore[no-untyped-def] # FIX ME
     charge: int = 0,
     spin_multiplicity: int = 1,
     default_inputs: list[str] | None = None,
@@ -187,16 +187,16 @@ def prep_calculator(
     ORCA
         The ORCA calculator
     """
-    inputs = merge_list_params(default_inputs, input_swaps)
-    blocks = merge_list_params(default_blocks, block_swaps)
+    inputs = merge_list_params(default_inputs, input_swaps)  # type: ignore[arg-type] # FIX ME
+    blocks = merge_list_params(default_blocks, block_swaps)  # type: ignore[arg-type] # FIX ME
     if "xyzfile" not in inputs:
         inputs.append("xyzfile")
     orcasimpleinput = " ".join(inputs)
     orcablocks = "\n".join(blocks)
     settings = get_settings()
 
-    return ORCA(
-        profile=OrcaProfile(command=settings.ORCA_CMD),
+    return ORCA(  # type: ignore[no-untyped-call] # FIX ME
+        profile=OrcaProfile(command=settings.ORCA_CMD),  # type: ignore[no-untyped-call] # FIX ME
         charge=charge,
         mult=spin_multiplicity,
         orcasimpleinput=orcasimpleinput,

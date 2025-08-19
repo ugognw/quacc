@@ -16,11 +16,11 @@ if TYPE_CHECKING:
 
 
 @job
-def static_job(
+def static_job(  # type: ignore[no-untyped-def] # FIX ME
     atoms: Atoms,
     method: Literal["GFN1-xTB", "GFN2-xTB", "DFTB"] = "GFN2-xTB",
     copy_files: SourceDirectory | dict[SourceDirectory, Filenames] | None = None,
-    kpts: tuple | list[tuple] | dict | None = None,
+    kpts: tuple | list[tuple] | dict | None = None,  # type: ignore[type-arg] # FIX ME
     additional_fields: dict[str, Any] | None = None,
     **calc_kwargs,
 ) -> RunSchema:
@@ -68,10 +68,10 @@ def static_job(
 
 
 @job
-def relax_job(
+def relax_job(  # type: ignore[no-untyped-def] # FIX ME
     atoms: Atoms,
     method: Literal["GFN1-xTB", "GFN2-xTB", "DFTB"] = "GFN2-xTB",
-    kpts: tuple | list[tuple] | dict | None = None,
+    kpts: tuple | list[tuple] | dict | None = None,  # type: ignore[type-arg] # FIX ME
     relax_cell: bool = False,
     copy_files: SourceDirectory | dict[SourceDirectory, Filenames] | None = None,
     additional_fields: dict[str, Any] | None = None,

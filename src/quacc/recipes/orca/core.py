@@ -299,7 +299,7 @@ def ase_relax_job(
 @job
 def ase_quasi_irc_job(
     atoms: Atoms,
-    mode: list[list[float]] | NDArray,
+    mode: list[list[float]] | NDArray,  # type: ignore[type-arg] # FIX ME
     perturb_magnitude: float = 0.6,
     direction: Literal["forward", "reverse"] = "forward",
     charge: int = 0,

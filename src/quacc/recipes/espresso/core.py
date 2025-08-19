@@ -38,7 +38,7 @@ BASE_SET_NON_METAL: EspressoBaseSet = {
 
 
 @job
-def static_job(
+def static_job(  # type: ignore[no-untyped-def] # FIX ME
     atoms: Atoms,
     preset: str | None = "sssp_1.3.0_pbe_efficiency",
     test_run: bool = False,
@@ -104,7 +104,7 @@ def static_job(
 
 
 @job
-def relax_job(
+def relax_job(  # type: ignore[no-untyped-def] # FIX ME
     atoms: Atoms,
     preset: str | None = "sssp_1.3.0_pbe_efficiency",
     relax_cell: bool = False,
@@ -175,7 +175,7 @@ def relax_job(
 
 
 @job
-def ase_relax_job(
+def ase_relax_job(  # type: ignore[no-untyped-def] # FIX ME
     atoms: Atoms,
     preset: str | None = "sssp_1.3.0_pbe_efficiency",
     autorestart: bool = True,
@@ -258,7 +258,7 @@ def ase_relax_job(
 
 
 @job
-def post_processing_job(
+def post_processing_job(  # type: ignore[no-untyped-def] # FIX ME
     copy_files: (
         SourceDirectory
         | list[SourceDirectory]
@@ -325,7 +325,7 @@ def post_processing_job(
 
 
 @job
-def non_scf_job(
+def non_scf_job(  # type: ignore[no-untyped-def] # FIX ME
     atoms: Atoms,
     copy_files: (
         SourceDirectory

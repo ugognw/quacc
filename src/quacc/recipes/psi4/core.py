@@ -22,7 +22,7 @@ if TYPE_CHECKING:
 
 @job
 @requires(has_psi4, "Psi4 not installed. Try conda install -c psi4 psi4")
-def static_job(
+def static_job(  # type: ignore[no-untyped-def] # FIX ME
     atoms: Atoms,
     charge: int = 0,
     spin_multiplicity: int = 1,

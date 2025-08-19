@@ -28,7 +28,7 @@ if TYPE_CHECKING:
 
 @job
 @requires(has_sella, "Sella must be installed. Refer to the quacc documentation.")
-def ts_job(
+def ts_job(  # type: ignore[no-untyped-def] # FIX ME
     atoms: Atoms,
     charge: int = 0,
     spin_multiplicity: int = 1,
@@ -83,7 +83,7 @@ def ts_job(
         atoms,
         charge,
         spin_multiplicity,
-        calc_defaults=calc_defaults,
+        calc_defaults=calc_defaults,  # type: ignore[arg-type] # FIX ME
         calc_swaps=calc_kwargs,
         opt_defaults=opt_defaults,
         opt_params=opt_params,
@@ -94,7 +94,7 @@ def ts_job(
 
 @job
 @requires(has_sella, "Sella must be installed. Refer to the quacc documentation.")
-def irc_job(
+def irc_job(  # type: ignore[no-untyped-def] # FIX ME
     atoms: Atoms,
     charge: int = 0,
     spin_multiplicity: int = 1,
@@ -156,7 +156,7 @@ def irc_job(
         atoms,
         charge,
         spin_multiplicity,
-        calc_defaults=calc_defaults,
+        calc_defaults=calc_defaults,  # type: ignore[arg-type] # FIX ME
         calc_swaps=calc_kwargs,
         opt_defaults=opt_defaults,
         opt_params=opt_params,
@@ -167,9 +167,9 @@ def irc_job(
 
 @job
 @requires(has_sella, "Sella must be installed. Refer to the quacc documentation.")
-def quasi_irc_job(
+def quasi_irc_job(  # type: ignore[no-untyped-def] # FIX ME
     atoms: Atoms,
-    mode: list[list[float]] | NDArray,
+    mode: list[list[float]] | NDArray,  # type: ignore[type-arg] # FIX ME
     perturb_magnitude: float = 0.6,
     direction: Literal["forward", "reverse"] = "forward",
     charge: int = 0,
@@ -236,7 +236,7 @@ def quasi_irc_job(
         perturb(atoms, mode, scale),
         charge=charge,
         spin_multiplicity=spin_multiplicity,
-        calc_defaults=calc_defaults,
+        calc_defaults=calc_defaults,  # type: ignore[arg-type] # FIX ME
         calc_swaps=calc_kwargs,
         opt_defaults=opt_defaults,
         opt_params=opt_params,

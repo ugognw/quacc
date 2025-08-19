@@ -21,34 +21,34 @@ if TYPE_CHECKING:
 class QChem(FileIOCalculator):
     """Custom Q-Chem calculator built on Pymatgen and Custodian."""
 
-    implemented_properties: ClassVar[list[str]] = [
+    implemented_properties: ClassVar[list[str]] = [  # type: ignore[misc] # FIX ME
         "energy",
         "forces",
         "hessian",
         "taskdoc",
     ]
-    results: ClassVar[QchemResults] = {}
+    results: ClassVar[QchemResults] = {}  # type: ignore[assignment, misc] # FIX ME
 
-    def __init__(
+    def __init__(  # type: ignore[no-untyped-def] # FIX ME
         self,
         atoms: Atoms,
         charge: int = 0,
         spin_multiplicity: int = 1,
-        rem: dict | None = None,
+        rem: dict | None = None,  # type: ignore[type-arg] # FIX ME
         opt: dict[str, list[str]] | None = None,
-        pcm: dict | None = None,
-        solvent: dict | None = None,
-        smx: dict | None = None,
-        scan: dict[str, list] | None = None,
+        pcm: dict | None = None,  # type: ignore[type-arg] # FIX ME
+        solvent: dict | None = None,  # type: ignore[type-arg] # FIX ME
+        smx: dict | None = None,  # type: ignore[type-arg] # FIX ME
+        scan: dict[str, list] | None = None,  # type: ignore[type-arg] # FIX ME
         van_der_waals: dict[str, float] | None = None,
         vdw_mode: Literal["atomic", "sequential"] = "atomic",
-        plots: dict | None = None,
-        nbo: dict | None = None,
-        geom_opt: dict | None = None,
-        cdft: list[list[dict]] | None = None,
+        plots: dict | None = None,  # type: ignore[type-arg] # FIX ME
+        nbo: dict | None = None,  # type: ignore[type-arg] # FIX ME
+        geom_opt: dict | None = None,  # type: ignore[type-arg] # FIX ME
+        cdft: list[list[dict]] | None = None,  # type: ignore[type-arg] # FIX ME
         almo_coupling: list[list[tuple[int, int]]] | None = None,
-        svp: dict | None = None,
-        pcm_nonels: dict | None = None,
+        svp: dict | None = None,  # type: ignore[type-arg] # FIX ME
+        pcm_nonels: dict | None = None,  # type: ignore[type-arg] # FIX ME
         qchem_dict_set_params: dict[str, Any] | None = None,
         **fileiocalculator_kwargs,
     ) -> None:
@@ -248,7 +248,7 @@ class QChem(FileIOCalculator):
         self._set_default_params()
 
         # Instantiate the calculator
-        super().__init__(
+        super().__init__(  # type: ignore[no-untyped-call] # FIX ME
             restart=None,
             label=None,
             command="",
@@ -279,7 +279,7 @@ class QChem(FileIOCalculator):
         -------
         None
         """
-        FileIOCalculator.write_input(self, atoms, properties, system_changes)
+        FileIOCalculator.write_input(self, atoms, properties, system_changes)  # type: ignore[no-untyped-call] # FIX ME
 
         qc_input = make_qc_input(self, atoms)
 
@@ -309,8 +309,8 @@ class QChem(FileIOCalculator):
         None
         """
         results, prev_orbital_coeffs = read_qchem(self.directory)
-        self.results = results
-        self.prev_orbital_coeffs = prev_orbital_coeffs
+        self.results = results  # type: ignore[misc] # FIX ME
+        self.prev_orbital_coeffs = prev_orbital_coeffs  # type: ignore[assignment] # FIX ME
 
     def _set_default_params(self) -> None:
         """

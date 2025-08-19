@@ -47,7 +47,7 @@ if TYPE_CHECKING:
     has_newtonnet, "NewtonNet must be installed. Refer to the quacc documentation."
 )
 @requires(has_sella, "Sella must be installed. Refer to the quacc documentation.")
-def ts_job(
+def ts_job(  # type: ignore[no-untyped-def] # FIX ME
     atoms: Atoms,
     use_custom_hessian: bool = False,
     run_freq: bool = True,
@@ -100,7 +100,7 @@ def ts_job(
     }
 
     calc_flags = recursive_dict_merge(calc_defaults, calc_kwargs)
-    opt_flags = recursive_dict_merge(opt_defaults, opt_params)
+    opt_flags = recursive_dict_merge(opt_defaults, opt_params)  # type: ignore[arg-type] # FIX ME
 
     if use_custom_hessian:
         opt_flags["optimizer_kwargs"]["hessian_function"] = _get_hessian
@@ -110,7 +110,7 @@ def ts_job(
     # Run the TS optimization
     dyn = Runner(atoms, calc).run_opt(**opt_flags)
     opt_ts_summary = _add_stdev_and_hess(
-        Summarize(additional_fields={"name": "NewtonNet TS"}).opt(dyn), **calc_flags
+        Summarize(additional_fields={"name": "NewtonNet TS"}).opt(dyn), **calc_flags  # type: ignore[arg-type] # FIX ME
     )
 
     # Run a frequency calculation
@@ -121,7 +121,7 @@ def ts_job(
     )
     opt_ts_summary["freq_job"] = freq_summary
 
-    return opt_ts_summary
+    return opt_ts_summary  # type: ignore[return-value] # FIX ME
 
 
 @job
@@ -129,7 +129,7 @@ def ts_job(
     has_newtonnet, "NewtonNet must be installed. Refer to the quacc documentation."
 )
 @requires(has_sella, "Sella must be installed. Refer to the quacc documentation.")
-def irc_job(
+def irc_job(  # type: ignore[no-untyped-def] # FIX ME
     atoms: Atoms,
     direction: Literal["forward", "reverse"] = "forward",
     run_freq: bool = True,
@@ -181,7 +181,7 @@ def irc_job(
     }
 
     calc_flags = recursive_dict_merge(calc_defaults, calc_kwargs)
-    opt_flags = recursive_dict_merge(opt_defaults, opt_params)
+    opt_flags = recursive_dict_merge(opt_defaults, opt_params)  # type: ignore[arg-type] # FIX ME
 
     # Define calculator
     calc = NewtonNet(**calc_flags)
@@ -190,7 +190,7 @@ def irc_job(
     with change_settings({"CHECK_CONVERGENCE": False}):
         dyn = Runner(atoms, calc).run_opt(**opt_flags)
         opt_irc_summary = _add_stdev_and_hess(
-            Summarize(
+            Summarize(  # type: ignore[arg-type] # FIX ME
                 additional_fields={"name": f"NewtonNet IRC: {direction}"}
                 | (additional_fields or {})
             ).opt(dyn)
@@ -204,7 +204,7 @@ def irc_job(
     )
     opt_irc_summary["freq_job"] = freq_summary
 
-    return opt_irc_summary
+    return opt_irc_summary  # type: ignore[return-value] # FIX ME
 
 
 @job
@@ -250,10 +250,10 @@ def quasi_irc_job(
     freq_job_kwargs = freq_job_kwargs or {}
 
     irc_job_defaults = {"max_steps": 5}
-    irc_job_kwargs = recursive_dict_merge(irc_job_defaults, irc_job_kwargs)
+    irc_job_kwargs = recursive_dict_merge(irc_job_defaults, irc_job_kwargs)  # type: ignore[assignment] # FIX ME
 
     # Run IRC
-    irc_summary = strip_decorator(irc_job)(
+    irc_summary = strip_decorator(irc_job)(  # type: ignore[arg-type] # FIX ME
         atoms, direction=direction, run_freq=False, **irc_job_kwargs
     )
 
@@ -269,14 +269,14 @@ def quasi_irc_job(
     relax_summary["freq_job"] = freq_summary
     relax_summary["irc_job"] = irc_summary
 
-    return relax_summary
+    return relax_summary  # type: ignore[no-any-return] # FIX ME
 
 
 @job
 @requires(
     has_newtonnet, "NewtonNet must be installed. Refer to the quacc documentation."
 )
-def neb_job(
+def neb_job(  # type: ignore[no-untyped-def] # FIX ME
     reactant_atoms: Atoms,
     product_atoms: Atoms,
     interpolation_method: Literal["linear", "idpp", "geodesic"] = "linear",
@@ -343,29 +343,29 @@ def neb_job(
     else:
         images = [reactant_atoms]
         images += [
-            reactant_atoms.copy() for _ in range(interpolate_flags["n_images"] - 2)
+            reactant_atoms.copy() for _ in range(interpolate_flags["n_images"] - 2)  # type: ignore[no-untyped-call] # FIX ME
         ]
         images += [product_atoms]
-        neb = NEB(images)
+        neb = NEB(images)  # type: ignore[no-untyped-call] # FIX ME
 
         # Interpolate linearly the positions of the middle images:
-        neb.interpolate(method=interpolation_method)
+        neb.interpolate(method=interpolation_method)  # type: ignore[no-untyped-call] # FIX ME
         images = neb.images
 
     max_steps = neb_flags.pop("max_steps", None)
-    dyn = Runner(images, calc).run_neb(max_steps=max_steps, neb_kwargs=neb_flags)
+    dyn = Runner(images, calc).run_neb(max_steps=max_steps, neb_kwargs=neb_flags)  # type: ignore[arg-type] # FIX ME
 
     return {
         "relax_reactant": relax_summary_r,
         "relax_product": relax_summary_p,
         "initial_images": images,
-        "neb_results": Summarize(
+        "neb_results": Summarize(  # type: ignore[typeddict-item] # FIX ME
             additional_fields={
                 "neb_flags": neb_flags,
                 "calc_flags": calc_flags,
                 "interpolate_flags": interpolate_flags,
             }
-        ).neb(dyn, len(images)),
+        ).neb(dyn, len(images)),  # type: ignore[arg-type] # FIX ME
     }
 
 
@@ -377,7 +377,7 @@ def neb_job(
     has_geodesic_interpolate,
     "geodesic-interpolate must be installed. Refer to the quacc documentation.",
 )
-def geodesic_job(
+def geodesic_job(  # type: ignore[no-untyped-def] # FIX ME
     reactant_atoms: Atoms,
     product_atoms: Atoms,
     relax_job_kwargs: dict[str, Any] | None = None,
@@ -458,7 +458,7 @@ def geodesic_job(
     }
 
 
-def _get_hessian(atoms: Atoms, **calc_kwargs) -> NDArray:
+def _get_hessian(atoms: Atoms, **calc_kwargs) -> NDArray:  # type: ignore[no-untyped-def, type-arg] # FIX ME
     """
     Calculate and retrieve the Hessian matrix for the given molecular configuration.
 
@@ -490,4 +490,4 @@ def _get_hessian(atoms: Atoms, **calc_kwargs) -> NDArray:
     calc_flags = recursive_dict_merge(calc_defaults, calc_kwargs)
     calc = NewtonNet(**calc_flags)
     calc.calculate(atoms)
-    return calc.results["hessian"].reshape((-1, 3 * len(atoms)))
+    return calc.results["hessian"].reshape((-1, 3 * len(atoms)))  # type: ignore[no-any-return] # FIX ME
